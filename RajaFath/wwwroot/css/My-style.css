@@ -1,0 +1,88 @@
+﻿#slider {
+    max-height: 500px;
+    margin-bottom: 3em;
+    min-width: 100%;
+}
+
+    #slider img {
+        -o-object-fit: cover;
+        max-height: 500px;
+        min-width: 100%;
+    }
+
+#my-flex {
+    display: flex;
+    align-items: center;
+}
+
+.my-circle {
+    border-radius: 50%;
+    width: 60px;
+    display: flex;
+    background: #837000;
+    color: #fff;
+    font-size: 1.2em;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.my-row {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.object-fit-cover {
+    object-fit: cover
+}
+
+.image-container {
+    position: relative; /* Create a positioning context for the absolute text */
+}
+
+.overlay-text {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Center both horizontally and vertically */
+    color: white; /* Text color */
+    font-size: 24px; /* Adjust font size as needed */
+    font-weight: bold; /* Font weight for emphasis */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a shadow for readability */
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+    pointer-events: none; /* Allow clicks to pass through the overlay */
+}
+
+h2 {
+    font-weight: 700;
+}
+
+.bi {
+    font-size: 2em;
+}
+
+.map {
+    width: 100%;
+    height: 300px;
+}
+.my-round-img {
+    width: 300px;
+    height: 300px;
+}
+@media (min-width: 769px) {
+    .my-round-img {
+        width: 20vw;
+        height: 20vw;
+    }
+}

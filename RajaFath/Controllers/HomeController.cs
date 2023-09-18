@@ -15,7 +15,13 @@ namespace RajaFath.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var slides = new List<Carousel>()
+            {
+                new Carousel{Id= 1, Title="carosel1",Description="the first description",Path="images\\slid1.jpg"},
+                new Carousel{Id= 1, Title="carosel1",Description="the first description",Path="images\\slid2.jpg"},
+                new Carousel{Id= 1, Title="carosel1",Description="the first description",Path="images\\slid3.jpg"},
+            };
+            return View(slides);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
