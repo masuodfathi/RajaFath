@@ -15,6 +15,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
         {
             
             options.SignIn.RequireConfirmedAccount = true;
+            options.Password.RequireNonAlphanumeric=false;
             
         }).AddErrorDescriber<CustomIdentityErrorDescriber>()
     .AddEntityFrameworkStores<ApplicationDbContext>();

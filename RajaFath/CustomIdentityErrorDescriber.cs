@@ -24,6 +24,6 @@ namespace RajaFath
         public override IdentityError PasswordRequiresLower() { return new IdentityError { Code = nameof(PasswordRequiresLower), Description = "کلمه عبور باید حداقل یک حرف کوچک داشته باشد." }; }
         public override IdentityError PasswordRequiresUpper() { return new IdentityError { Code = nameof(PasswordRequiresUpper), Description = "کلمه عبور باید حداقل یک حرف بزرگ داشته باشد." }; }
         public override IdentityError RecoveryCodeRedemptionFailed() { return new IdentityError { Code = nameof(RecoveryCodeRedemptionFailed), Description = "بازیابی ناموفق بود." }; }
-        public override IdentityError PasswordRequiresUniqueChars(int uniqueChars) { return new IdentityError { Code = nameof(PasswordRequiresUniqueChars), Description = $"کلمه عبور باید حداقل داراى {uniqueChars} حرف متفاوت باشد." }; }
+        public override IdentityError PasswordRequiresUniqueChars(int uniqueChars) { return new IdentityError { Code = nameof(PasswordRequiresUniqueChars), Description = $"کلمه عبور باید حداقل داراى {uniqueChars} کاراکتر خاض باشد." }; }
     }
 }
