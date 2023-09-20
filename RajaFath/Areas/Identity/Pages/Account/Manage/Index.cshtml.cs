@@ -56,8 +56,11 @@ namespace RajaFath.Areas.Identity.Pages.Account.Manage
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "شماره موبایل")]
             public string PhoneNumber { get; set; }
+            [Display(Name = "نام کاربری")]
+            public string _username { get; set; }
+            
         }
 
         private async Task LoadAsync(IdentityUser user)
@@ -69,7 +72,8 @@ namespace RajaFath.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                _username = userName
             };
         }
 
@@ -109,9 +113,19 @@ namespace RajaFath.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+            var Username = await _userManager.GetUserNameAsync(user);
+            if (Input._username != Username)
+            {
+                var setusernameResult = await _userManager.SetUserNameAsync(user, Input._username);
+                if (!setusernameResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    return RedirectToPage();
+                }
+            }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "اطلاعات شما به روز رسانی شد.";
             return RedirectToPage();
         }
     }
