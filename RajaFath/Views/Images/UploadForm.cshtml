@@ -14,16 +14,16 @@
 
 <form asp-action="UploadForm" method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label asp-for="Name">Name:</label>
-        <input asp-for="Name" class="form-control"/>
+        <label asp-for="FileName">Name:</label>
+        <input asp-for="FileName" class="form-control"/>
     </div>
     <div class="form-group">
-        <label asp-for="Description">Description:</label>
-        <input asp-for="Description" class="form-control"/>
+        <label asp-for="Caption">Caption:</label>
+        <input asp-for="Caption" class="form-control"/>
     </div>
     <div class="form-group">
-        <label asp-for="Path">Image:</label>
-        <input type="file" asp-for="Path" name="imageFile" class="form-control-file"/>
+        <label asp-for="ImageUrl">Image:</label>
+        <input type="file" asp-for="ImageUrl" name="imageFile" class="form-control-file"/>
     </div>
     <button type="submit" class="btn btn-primary">Upload</button>
 </form>

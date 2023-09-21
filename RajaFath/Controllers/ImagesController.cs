@@ -181,7 +181,7 @@ namespace RajaFath.Controllers
                         await imageFile.CopyToAsync(stream);
                     }
 
-                    model.Path = "/images/" + imageFile.FileName; // Set the image path
+                    model.ImageUrl = "/images/" + imageFile.FileName; // Set the image path
                     
                     
                 }
