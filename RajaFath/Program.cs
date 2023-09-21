@@ -16,9 +16,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
             
             options.SignIn.RequireConfirmedAccount = true;
             options.Password.RequireNonAlphanumeric=false;
+            options.SignIn.RequireConfirmedAccount = false;
             
-        }).AddErrorDescriber<CustomIdentityErrorDescriber>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+        })
+          .AddRoles<IdentityRole>()
+          .AddErrorDescriber<CustomIdentityErrorDescriber>()
+          .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

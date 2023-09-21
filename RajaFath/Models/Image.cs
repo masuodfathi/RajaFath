@@ -8,8 +8,15 @@ namespace RajaFath.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public string? Path { get; set; }
+
+        [Required]
+        public string? FileName { get; set; }
+        public string? Caption { get; set; }
+        public string? AltText { get; set; }
+        public string? ImageUrl { get; set; }
+        public DateTime? UploadDate { get; set; }
+
+        // Navigation property for the associated image-post relationships
+        public ICollection<ImagePost>? ImagePosts { get; set; }
     }
 }
