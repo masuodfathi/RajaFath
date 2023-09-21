@@ -86,6 +86,10 @@ namespace RajaFath.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -137,6 +141,8 @@ namespace RajaFath.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -224,6 +230,60 @@ namespace RajaFath.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PostPost", b =>
+                {
+                    b.Property<int>("RecommendedPostsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RelatedPostsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RecommendedPostsId", "RelatedPostsId");
+
+                    b.HasIndex("RelatedPostsId");
+
+                    b.ToTable("PostPost");
+                });
+
+            modelBuilder.Entity("RajaFath.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Downvotes")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Upvotes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("RajaFath.Models.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -232,18 +292,204 @@ namespace RajaFath.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Description")
+                    b.Property<string>("AltText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Caption")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Path")
+                    b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UploadDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("RajaFath.Models.ImagePost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("ImagePosts");
+                });
+
+            modelBuilder.Entity("RajaFath.Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AuthorBio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double?>("AverageRating")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("BookmarkCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CanonicalUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CommentCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContentAttribution")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContentSource")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Dislikes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Excerpt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FacebookLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FeaturedImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsAudio")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsCommentEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsImageGallery")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsScheduled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsUserFavorite")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsVideo")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Likes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MetaDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MetaTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OgDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OgTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan?>("ReadingTime")
+                        .HasColumnType("time");
+
+                    b.Property<int?>("ReportCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ScheduledPublishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ShareCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Slug")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SourceUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("TotalRatings")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TwitterDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TwitterLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TwitterTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Views")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WordCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("RajaFath.Models.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -295,6 +541,76 @@ namespace RajaFath.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PostPost", b =>
+                {
+                    b.HasOne("RajaFath.Models.Post", null)
+                        .WithMany()
+                        .HasForeignKey("RecommendedPostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RajaFath.Models.Post", null)
+                        .WithMany()
+                        .HasForeignKey("RelatedPostsId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RajaFath.Models.Comment", b =>
+                {
+                    b.HasOne("RajaFath.Models.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId");
+
+                    b.HasOne("RajaFath.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RajaFath.Models.ImagePost", b =>
+                {
+                    b.HasOne("RajaFath.Models.Image", "Image")
+                        .WithMany("ImagePosts")
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RajaFath.Models.Post", "Post")
+                        .WithMany("ImagePosts")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("RajaFath.Models.Post", b =>
+                {
+                    b.HasOne("RajaFath.Models.ApplicationUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("RajaFath.Models.Image", b =>
+                {
+                    b.Navigation("ImagePosts");
+                });
+
+            modelBuilder.Entity("RajaFath.Models.Post", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("ImagePosts");
                 });
 #pragma warning restore 612, 618
         }

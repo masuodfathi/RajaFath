@@ -4,7 +4,7 @@ namespace RajaFath.Models
 {
     public class Post
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -23,8 +23,8 @@ namespace RajaFath.Models
         public bool? IsPublished { get; set; } // Whether the post is published or draft
         public string? Slug { get; set; } // A user-friendly URL slug for the post
         public string? FeaturedImage { get; set; } // URL or file path to a featured image
-        public List<string?>? Tags { get; set; } // Tags associated with the post
-        public List<string?>? Categories { get; set; } // Categories to organize posts
+        //public List<string?>? Tags { get; set; } // Tags associated with the post
+        //public List<string?>? Categories { get; set; } // Categories to organize posts
         public int? Views { get; set; } // Number of views for the post
         public int? Likes { get; set; } // Number of likes for the post
         public int? Dislikes { get; set; } // Number of dislikes for the post
@@ -41,7 +41,7 @@ namespace RajaFath.Models
         public string? Excerpt { get; set; } // A short teaser or summary of the post
 
         // Navigation property for the author
-        public ApplicationUser? Author { get; set; }
+        //public ApplicationUser? Author { get; set; }
 
         // Navigation property for comments (assuming you have a Comment model)
         public List<Comment>? Comments { get; set; }
@@ -85,6 +85,6 @@ namespace RajaFath.Models
         public string? TwitterLink { get; set; } // Link to the post on Twitter
         
         // Navigation property for the associated images
-        public ICollection<ImagePost>? ImagePosts { get; set; }
+        public List<ImagePost>? ImagePosts { get; set; }
     }
 }

@@ -4,7 +4,8 @@ namespace RajaFath.Models
 {
     public class Comment
     {
-        public int? Id { get; set; }
+        [Key]
+        public int Id { get; set; }
 
         [Required]
         public string? Content { get; set; } // The content of the comment
@@ -17,7 +18,7 @@ namespace RajaFath.Models
 
         // User-related properties
         public string? UserId { get; set; } // ID of the user who posted the comment
-        public ApplicationUser? User { get; set; } // User who posted the comment
+        //public ApplicationUser? User { get; set; } // User who posted the comment
 
         // Additional properties
         public bool? IsApproved { get; set; } // Indicates if the comment is approved or pending moderation
