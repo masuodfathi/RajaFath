@@ -24,7 +24,7 @@
             <tr>
                 <td>@role.Name</td>
                 <td>
-                    <a href="@Url.Action("EditRole", new { roleId = role.Id })">Edit</a> |
+                    <a asp-action="EditRole" asp-route-id="@role.Id">Edit</a> |
                     <a href="@Url.Action("DeleteRole", new { roleId = role.Id })">Delete</a>
                 </td>
             </tr>

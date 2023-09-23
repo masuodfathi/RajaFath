@@ -53,11 +53,36 @@ namespace RajaFath.Controllers
         }
 
         // Edit an existing role
-        public async Task<IActionResult> EditRole(string roleId, string newName)
+        [HttpGet]
+        public async Task<IActionResult> EditRole(string Id)
         {
-            // Implement code to edit a role
-            var role = await _roleManager.FindByIdAsync(roleId);
-            role.Name = newName;
+            if (string.IsNullOrEmpty(Id))
+            {
+                return RedirectToAction("ListRoles");
+            }
+
+            var role = await _roleManager.FindByIdAsync(Id);
+
+            if (role == null)
+            {
+                return RedirectToAction("ListUsers");
+            }
+
+            var model = new IdentityRole
+            {
+                Id = Id,
+                Name = role.Name
+            };
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditRole(string Id, string Name)
+        {
+            //Implement code to edit a role
+            var role = await _roleManager.FindByIdAsync(Id);
+            string oldName = role.Name;
+            role.Name = Name;
 
             var result = await _roleManager.UpdateAsync(role);
 
@@ -69,10 +94,21 @@ namespace RajaFath.Controllers
             else
             {
                 // Handle errors
-                return View();
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                // Create a view model to display user information
+                var model = new IdentityRole
+                {
+                    Id = role.Id,
+                    Name = oldName
+                };
+
+                return View(model);
             }
         }
-
         // Delete a role
         [HttpGet]
         public async Task<IActionResult> DeleteRole(string roleId)
@@ -276,7 +312,7 @@ namespace RajaFath.Controllers
             var roles = await _userManager.GetRolesAsync(user);
             
 
-            var model = new UserListViewModel
+            var model = new EditUserViewModel
             {
                 UserId = user.Id,
                 UserName = user.UserName,
@@ -291,7 +327,7 @@ namespace RajaFath.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditUser(UserListViewModel model)
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -342,7 +378,7 @@ namespace RajaFath.Controllers
                 return NotFound();
             }
 
-            var model = new UserListViewModel
+            var model = new EditUserViewModel
             {
                 UserId = user.Id,
                 UserName = user.UserName,

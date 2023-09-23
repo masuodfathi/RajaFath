@@ -1,4 +1,4 @@
-﻿@model RajaFath.Models.UserListViewModel
+﻿@model RajaFath.Models.EditUserViewModel
 
 @{
     ViewData["Title"] = "EditUser";
@@ -35,7 +35,7 @@
             <option value="">Select Role</option>
             @foreach (var r in Model.AllRoles)
             {
-                <option value="@r" selected="@(Model.Role)">@r</option>
+                <option value="@r" selected="@(r == Model.Role)">@r</option>
             }
         </select>
     </div>

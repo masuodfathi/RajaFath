@@ -1,17 +1,19 @@
-﻿@model RajaFath.Models.UserListViewModel
+﻿@model RajaFath.Models.EditUserViewModel
 @{
     ViewData["Title"] = "DeleteUser";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 
-<h2>Delete User</h2>
+<h2>
+    حذف کاربر
+</h2>
 
-<p>Are you sure you want to delete the following user?</p>
-<p><strong>Username:</strong> @Model.UserName</p>
-<p><strong>Email:</strong> @Model.Email</p>
+<p>آیا برای حذف کاربر اطمینان دارید؟</p>
+<p><strong>نام کاربری:</strong> @Model.UserName</p>
+<p><strong>ایمیل:</strong> @Model.Email</p>
 
 <form asp-action="DeleteUserConfirmed" asp-route-id="@Model.UserId" method="post">
     @Html.AntiForgeryToken()
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-action="ListUsers" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-danger">حذف</button>
+    <a asp-action="ListUsers" class="btn btn-secondary">انصراف</a>
 </form>
