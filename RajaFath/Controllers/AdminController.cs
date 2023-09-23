@@ -74,15 +74,34 @@ namespace RajaFath.Controllers
         }
 
         // Delete a role
+        [HttpGet]
         public async Task<IActionResult> DeleteRole(string roleId)
         {
             // Implement code to delete a role
             var role = await _roleManager.FindByIdAsync(roleId);
-
+            
+            if (role == null)
+            {
+                return NotFound();
+            }
+            var model = new IdentityRole 
+            { 
+                Id = roleId,
+                Name = role.Name,
+            };
+            var allUsers = await _userManager.GetUsersInRoleAsync(role.Name);
+            ViewBag.NumberofUsersWithThisRole = allUsers.Count();
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteRoleConfirmed(string Id)
+        {
+            var role = await _roleManager.FindByIdAsync(Id);
             if (role != null)
             {
                 var result = await _roleManager.DeleteAsync(role);
-
+                
                 if (result.Succeeded)
                 {
                     // Role deletion successful
@@ -91,7 +110,19 @@ namespace RajaFath.Controllers
                 else
                 {
                     // Handle errors
-                    return View();
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    // Create a view model to display user information
+                    var model = new IdentityRole
+                    {
+                        Id = role.Id,
+                        Name = role.Name
+                    };
+                    
+                    return View(model);
                 }
             }
             else
@@ -243,6 +274,7 @@ namespace RajaFath.Controllers
             }
 
             var roles = await _userManager.GetRolesAsync(user);
+            
 
             var model = new UserListViewModel
             {

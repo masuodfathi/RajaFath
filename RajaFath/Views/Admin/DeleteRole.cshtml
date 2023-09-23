@@ -1,0 +1,30 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole
+@{
+    ViewData["Title"] = "DeleteRole";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+
+<h2>
+    حذف نقش کاربری
+</h2>
+
+<p class="alert alert-danger" role="alert">
+    آیا برای حذف نقش کاربری <b>" @Model.Name "</b> اطمینان دارید؟
+</p>
+<p class="alert alert-warning" role="alert">
+    تمام کاربرانی که این نقش به آنها اختصاص داده شده نقش خود را از دست خواهند داد.
+</p>
+<p class="alert alert-warning" role="alert">
+    @ViewBag.NumberofUsersWithThisRole کاربر دارای این نقش هستند
+</p>
+<p><strong>نام نقش:</strong> @Model.Name</p>
+
+
+
+<form asp-action="DeleteRoleConfirmed" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">حذف</button>
+    <a asp-action="ListRoles" class="btn btn-secondary">بازگشت</a>
+</form>
