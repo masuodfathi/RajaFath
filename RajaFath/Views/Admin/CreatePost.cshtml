@@ -1,0 +1,60 @@
+﻿@model RajaFath.Models.PostCreateViewModel
+@{
+    ViewData["Title"] = "CreatePost";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<h1>CreatePost</h1>
+<form asp-action="CreatePost" method="post">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Content"></label>
+        <textarea asp-for="Content" class="form-control"></textarea>
+        <span asp-validation-for="Content"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Excerpt"></label>
+        <textarea asp-for="Excerpt" class="form-control"></textarea>
+        <span asp-validation-for="Excerpt"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Author"></label>
+        <textarea asp-for="Author" class="form-control"></textarea>
+        <span asp-validation-for="Author"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="UpdateDate"></label>
+        <textarea asp-for="UpdateDate" class="form-control"></textarea>
+        <span asp-validation-for="UpdateDate"></span>
+    </div>
+
+    <!-- Tags (multi-select) -->
+    <div class="form-group">
+        <label asp-for="SelectedTagIds"></label>
+        <select asp-for="SelectedTagIds" asp-items="new SelectList(Model.Tags, nameof(Tag.Id), nameof(Tag.Name))" class="form-control" multiple></select>
+        <span asp-validation-for="SelectedTagIds"></span>
+    </div>
+    <!-- Categories (multi-select) -->
+    <div class="form-group">
+        <label asp-for="SelectedCategoryIds"></label>
+        <select asp-for="SelectedCategoryIds" asp-items="new SelectList(Model.Categories, nameof(Category.Id), nameof(Category.Name))" class="form-control" multiple></select>
+        <span asp-validation-for="SelectedCategoryIds"></span>
+    </div>
+    <!-- Image -->
+    <div class="form-group">
+        <label asp-for="ImageFile"></label>
+        <input asp-for="ImageFile" type="file" class="form-control-file" />
+        <span asp-validation-for="ImageFile"></span>
+    </div>
+
+    <!-- Add more input fields for other properties -->
+
+    <button type="submit" class="btn btn-primary">Create Post</button>
+</form>

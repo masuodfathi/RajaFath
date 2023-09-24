@@ -1,0 +1,86 @@
+﻿@model IEnumerable<RajaFath.Models.Post>
+@{
+    ViewData["Title"] = "PostList";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+
+<h1>
+    لیست نوشته‌ها
+</h1>
+
+<p>
+    <a asp-action="Create">
+        ایجاد نوشته
+    </a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPublished)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Views)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Excerpt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CommentCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayFor(model => item.Title)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => item.Content)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => item.UpdatedDate)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => item.AuthorId)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => item.IsPublished)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => item.Views)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => item.Excerpt)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => item.CommentCount)
+                </th>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

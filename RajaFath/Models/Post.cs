@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace RajaFath.Models
 {
@@ -13,18 +14,17 @@ namespace RajaFath.Models
         [Required]
         [MaxLength(5000)]
         public string? Content { get; set; }
-
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-
         public string? AuthorId { get; set; } // Reference to the author's user ID
+        public string? Excerpt { get; set; } // A short teaser or summary of the post
+        public string? FeaturedImage { get; set; } // URL or file path to a featured image
 
-        // Additional properties
+        // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
+        // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
+        // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
         public bool? IsPublished { get; set; } // Whether the post is published or draft
         public string? Slug { get; set; } // A user-friendly URL slug for the post
-        public string? FeaturedImage { get; set; } // URL or file path to a featured image
-        //public List<string?>? Tags { get; set; } // Tags associated with the post
-        //public List<string?>? Categories { get; set; } // Categories to organize posts
         public int? Views { get; set; } // Number of views for the post
         public int? Likes { get; set; } // Number of likes for the post
         public int? Dislikes { get; set; } // Number of dislikes for the post
@@ -38,10 +38,10 @@ namespace RajaFath.Models
         public bool? IsArchived { get; set; } // Whether the post is archived
         public int? WordCount { get; set; } // Number of words in the content
         public TimeSpan? ReadingTime { get; set; } // Estimated reading time for the post
-        public string? Excerpt { get; set; } // A short teaser or summary of the post
+        
 
         // Navigation property for the author
-        //public ApplicationUser? Author { get; set; }
+        public IdentityUser? Author { get; set; }
 
         // Navigation property for comments (assuming you have a Comment model)
         public List<Comment>? Comments { get; set; }
@@ -86,5 +86,11 @@ namespace RajaFath.Models
         
         // Navigation property for the associated images
         public List<ImagePost>? ImagePosts { get; set; }
+
+        // Navigation property to represent tags associated with the post
+        public List<PostTag>? Tags { get; set; }
+
+        // Navigation property to represent categories associated with the post
+        public List<PostCategory>? Categories { get; set; }
     }
 }

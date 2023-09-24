@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RajaFath;
 using RajaFath.Data;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,17 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
           .AddErrorDescriber<CustomIdentityErrorDescriber>()
           .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+// Add services for file uploads
+builder.Services.AddHttpContextAccessor();
+
+// Configure the upload folder
+var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","images"); // Change the folder path as needed
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = int.MaxValue;
+    options.MultipartHeadersLengthLimit = int.MaxValue;
+});
 
 var app = builder.Build();
 

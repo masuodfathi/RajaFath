@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using RajaFath.Data;
 using RajaFath.Models;
 
 
@@ -13,13 +14,15 @@ namespace RajaFath.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly ApplicationDbContext _context;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore)
+        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ApplicationDbContext context)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
+            _context = context;
         }
         public IActionResult Index()
         {
@@ -169,7 +172,6 @@ namespace RajaFath.Controllers
         }
 
         /////////////////////////Users
-        ///
 
         public IActionResult ListUsers()
         {
@@ -466,6 +468,52 @@ namespace RajaFath.Controllers
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<IdentityUser>)_userStore;
+        }
+
+
+        ////////////////post/////////////////////
+        public async Task<IActionResult> PostList()
+        {
+            return _context.Posts != null ?
+                        View(await _context.Posts.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
+        }
+        public async Task<IActionResult> CreatePost()
+        {
+            var tags = await _context.Tags.ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
+
+            var model = new PostCreateViewModel
+            {
+                Tags = tags, // Populate tags
+                Categories = categories, // Populate categories
+                Author = "",
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        
+        
+        public async Task<IActionResult> Create(Post post)
+        {
+            if (ModelState.IsValid)
+            {
+                // You can set other properties like CreatedDate, AuthorId, etc.
+                post.CreatedDate = DateTime.Now;
+
+                // Save the new post to the database (e.g., using Entity Framework)
+                _context.Add(post);
+                await _context.SaveChangesAsync();
+
+                // Redirect to the list of posts or another appropriate page
+                return RedirectToAction("Index", "Post");
+            }
+
+            // If ModelState is not valid, return the view with validation errors
+            return View(post);
         }
     }
 }
