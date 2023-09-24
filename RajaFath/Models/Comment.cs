@@ -7,7 +7,7 @@ namespace RajaFath.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string? Content { get; set; } // The content of the comment

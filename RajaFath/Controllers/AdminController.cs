@@ -495,8 +495,8 @@ namespace RajaFath.Controllers
                 Categories = categories,
                 Tags = tags,
                 CurrentUser = currentUser,
-                AvailableCategories = categories.Select(c => new SelectListItem { Value = c.Id, Text = c.Name }).ToList(),
-                AvailableTags = tags.Select(t => new SelectListItem { Value = t.Id, Text = t.Name }).ToList(),
+                AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList(),
+                AvailableTags = tags.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }).ToList(),
             };
 
             return View(model);

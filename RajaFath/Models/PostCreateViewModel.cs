@@ -22,10 +22,10 @@ namespace RajaFath.Models
         // Add other properties like excerpt, author, updated date, etc.
 
         [Display(Name = "Tags")]
-        public List<string>? SelectedTagIds { get; set; }
+        public List<int>? SelectedTagIds { get; set; }
 
         [Display(Name = "Categories")]
-        public List<string>? SelectedCategoryIds { get; set; }
+        public List<int>? SelectedCategoryIds { get; set; }
 
         [Display(Name = "Image")]
         public IFormFile? ImageFile { get; set; }

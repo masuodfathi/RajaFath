@@ -7,7 +7,7 @@ namespace RajaFath.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public int Id { get; set; }
         public int ImageId { get; set; }
         public Image? Image { get; set; }
 

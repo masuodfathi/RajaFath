@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RajaFath.Data;
 
 #nullable disable
 
-namespace RajaFath.Data.Migrations
+namespace RajaFath.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230924214155_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,13 +243,16 @@ namespace RajaFath.Data.Migrations
 
             modelBuilder.Entity("RajaFath.Models.Category", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"), 1L, 1);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
                 });
@@ -488,23 +493,17 @@ namespace RajaFath.Data.Migrations
 
             modelBuilder.Entity("RajaFath.Models.PostCategory", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("CategoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("CategorysId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
-
-                    b.Property<string>("PostsId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -517,23 +516,17 @@ namespace RajaFath.Data.Migrations
 
             modelBuilder.Entity("RajaFath.Models.PostTag", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PostsId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TagId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TagsId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -546,8 +539,11 @@ namespace RajaFath.Data.Migrations
 
             modelBuilder.Entity("RajaFath.Models.Tag", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -673,7 +669,7 @@ namespace RajaFath.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("RajaFath.Models.Post", "Post")
-                        .WithMany("Categories")
+                        .WithMany("PostCategory")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -686,7 +682,7 @@ namespace RajaFath.Data.Migrations
             modelBuilder.Entity("RajaFath.Models.PostTag", b =>
                 {
                     b.HasOne("RajaFath.Models.Post", "Post")
-                        .WithMany("Tags")
+                        .WithMany("PostTag")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -709,13 +705,13 @@ namespace RajaFath.Data.Migrations
 
             modelBuilder.Entity("RajaFath.Models.Post", b =>
                 {
-                    b.Navigation("Categories");
-
                     b.Navigation("Comments");
 
                     b.Navigation("ImagePosts");
 
-                    b.Navigation("Tags");
+                    b.Navigation("PostCategory");
+
+                    b.Navigation("PostTag");
                 });
 #pragma warning restore 612, 618
         }

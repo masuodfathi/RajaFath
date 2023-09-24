@@ -7,7 +7,8 @@ namespace RajaFath.Models
     public class Post
     {
         [Key]
-        public string Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(100)]
