@@ -6,8 +6,8 @@ namespace RajaFath.Models
         public class Image
         {
             [Key]
-            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-            public int Id { get; set; }
+            
+            public string Id { get; set; }
 
             [Required]
             public string? FileName { get; set; }

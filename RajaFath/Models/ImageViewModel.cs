@@ -4,7 +4,7 @@ namespace RajaFath.Models
 {
     public class ImageViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required(ErrorMessage = "Please select an image to upload.")]
         [Display(Name = "Image File")]
         public IFormFile ImageFile { get; set; }

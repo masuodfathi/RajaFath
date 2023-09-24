@@ -17,9 +17,9 @@ namespace RajaFath.Controllers
         {
             var slides = new List<Carousel>()
             {
-                new Carousel{Id= 1, Title="carosel1",Description="the first description",Path="images\\slid1.jpg"},
-                new Carousel{Id= 1, Title="carosel1",Description="the first description",Path="images\\slid2.jpg"},
-                new Carousel{Id= 1, Title="carosel1",Description="the first description",Path="images\\slid3.jpg"},
+                new Carousel{Id= "1", Title="carosel1",Description="the first description",Path="images\\slid1.jpg"},
+                new Carousel{Id= "2", Title="carosel1",Description="the first description",Path="images\\slid2.jpg"},
+                new Carousel{Id= "3", Title="carosel1",Description="the first description",Path="images\\slid3.jpg"},
             };
             return View(slides);
         }

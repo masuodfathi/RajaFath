@@ -15,14 +15,16 @@ namespace RajaFath.Controllers
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ApplicationDbContext context)
+        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -480,14 +482,21 @@ namespace RajaFath.Controllers
         }
         public async Task<IActionResult> CreatePost()
         {
-            var tags = await _context.Tags.ToListAsync();
+            // Retrieve a list of categories and tags from your database
             var categories = await _context.Categories.ToListAsync();
+            var tags = await _context.Tags.ToListAsync();
+
+            // Get the current user (you can use HttpContext.User.Identity)
+            var currentUser = await _userManager.GetUserAsync(User);
+            
 
             var model = new PostCreateViewModel
             {
-                Tags = tags, // Populate tags
-                Categories = categories, // Populate categories
-                Author = "",
+                Categories = categories,
+                Tags = tags,
+                CurrentUser = currentUser,
+                AvailableCategories = categories.Select(c => new SelectListItem { Value = c.Id, Text = c.Name }).ToList(),
+                AvailableTags = tags.Select(t => new SelectListItem { Value = t.Id, Text = t.Name }).ToList(),
             };
 
             return View(model);
@@ -495,8 +504,87 @@ namespace RajaFath.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        
-        
+        public async Task<IActionResult> CreatePost(PostCreateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                // Map properties from the view model to your Post model
+                var post = new Post
+                {
+                    Title = model.Title,
+                    Content = model.Content,
+                    Author = currentUser,
+                    CreatedDate = DateTime.Now, // Set the creation date
+                    UpdatedDate = DateTime.Now, // Set the update date to the current time
+                    FeaturedImage = SaveFeaturedImage(model.ImageFile)
+                };
+                _context.Posts.Add(post);
+                await _context.SaveChangesAsync();
+
+                if (model.SelectedCategoryIds != null)
+                {
+                    // Add selected categories to the post
+                    foreach (var categoryId in model.SelectedCategoryIds)
+                    {
+                        var postCategory = new PostCategory
+                        {
+                            
+                            //PostId = post.Id,
+                            CategoryId = categoryId
+                        };
+                        // Add postCategory to your database
+                        
+                    }
+                }
+                if (model.SelectedTagIds != null)
+                {
+                    // Add selected tags to the post
+                    foreach (var tagId in model.SelectedTagIds)
+                    {
+                        var postTag = new PostTag
+                        {
+                            Post = post,
+                            TagId = tagId
+                        };
+                        // Add postTag to your database
+                        
+                    }
+                }
+                
+                _context.SaveChanges(); // Save changes to add relationships
+                // Redirect to the post details page or another appropriate action
+                return RedirectToAction("Details", new { id = post.Id });
+            }
+
+            // If ModelState is not valid, return the view with validation errors
+            
+            return View(model);
+        }
+        private string SaveFeaturedImage(IFormFile imageFile)
+        {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                // Implement the logic to save the image to your desired location.
+                // For example, you can save it to the wwwroot/images folder:
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                var uniqueFileName = Guid.NewGuid() + "_" + imageFile.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    imageFile.CopyTo(fileStream);
+                }
+
+                return "/images/" + uniqueFileName;
+            }
+            else
+            {
+                // Handle the case where no image was provided.
+                return null; // You can return a default image path or handle it as needed.
+            }
+        }
+
         public async Task<IActionResult> Create(Post post)
         {
             if (ModelState.IsValid)

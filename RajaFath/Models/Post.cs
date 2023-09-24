@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RajaFath.Models
 {
     public class Post
     {
-        public int Id { get; set; }
+        [Key]
+        public string Id { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -88,9 +90,9 @@ namespace RajaFath.Models
         public List<ImagePost>? ImagePosts { get; set; }
 
         // Navigation property to represent tags associated with the post
-        public List<PostTag>? Tags { get; set; }
+        public List<PostTag>? PostTag { get; set; }
 
         // Navigation property to represent categories associated with the post
-        public List<PostCategory>? Categories { get; set; }
+        public List<PostCategory>? PostCategory { get; set; }
     }
 }
