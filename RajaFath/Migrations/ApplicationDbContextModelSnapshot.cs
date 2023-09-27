@@ -509,7 +509,7 @@ namespace RajaFath.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("PostCategory");
+                    b.ToTable("postCategories");
                 });
 
             modelBuilder.Entity("RajaFath.Models.PostTag", b =>
@@ -532,7 +532,7 @@ namespace RajaFath.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("PostTag");
+                    b.ToTable("postTags");
                 });
 
             modelBuilder.Entity("RajaFath.Models.Tag", b =>

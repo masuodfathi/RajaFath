@@ -22,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Content)
+                @Html.DisplayNameFor(model => model.Excerpt)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.UpdatedDate)
@@ -35,9 +35,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Views)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Excerpt)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CommentCount)
@@ -53,7 +50,7 @@
                     @Html.DisplayFor(model => item.Title)
                 </th>
                 <th>
-                    @Html.DisplayFor(model => item.Content)
+                    @Html.DisplayFor(model => item.Excerpt)
                 </th>
                 <th>
                     @Html.DisplayFor(model => item.UpdatedDate)
@@ -68,15 +65,12 @@
                     @Html.DisplayFor(model => item.Views)
                 </th>
                 <th>
-                    @Html.DisplayFor(model => item.Excerpt)
-                </th>
-                <th>
                     @Html.DisplayFor(model => item.CommentCount)
                 </th>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="DeletePost" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }

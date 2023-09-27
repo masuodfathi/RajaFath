@@ -14,7 +14,7 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row">
+        <div class="row min-vh-100">
             <!-- Sidebar -->
             <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar text-light py-4">
                 <div class="sidebar-header">
@@ -32,6 +32,17 @@
                     </li>
                     <li class="py-2">
                         <a href="/Admin/ListUsers" class="text-decoration-none text-light">مدیریت کاربران</a>
+                    </li>
+                    <li class="py-2">
+                        <a href="/Admin/PostList" class="text-decoration-none text-light">نوشته ها</a>
+                        <ul class="list-unstyled components py-1 mx-3 px-0">
+                            <li class="py-2">
+                                <a href="/Admin/PostList" class="text-decoration-none text-light">همه نوشته ها</a>
+                            </li>
+                            <li class="py-2">
+                                <a href="/Admin/CreatePost" class="text-decoration-none text-light">افزودن نوشته</a>
+                            </li>
+                        </ul>
                     </li>
                     <!-- Add more menu items as needed -->
                 </ul>
@@ -56,6 +67,7 @@
     </div>
     <!-- Add Bootstrap and jQuery scripts (you may need to adjust the paths) -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

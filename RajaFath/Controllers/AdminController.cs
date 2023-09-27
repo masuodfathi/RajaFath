@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using HtmlAgilityPack;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging.Signing;
 using RajaFath.Data;
 using RajaFath.Models;
-
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace RajaFath.Controllers
 {
@@ -480,6 +484,50 @@ namespace RajaFath.Controllers
                         View(await _context.Posts.ToListAsync()) :
                         Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
         }
+        [HttpGet]
+        public async Task<IActionResult> DeletePost(int? Id)
+        {
+            if (Id == null)
+            {
+                return NotFound();
+            }
+            var post = await _context.Posts.FindAsync(Id);
+            if (post != null)
+            {
+                var model = new PostCreateViewModel
+                {
+                    PostId = post.Id,
+                    Title = post.Title,
+                    Excerpt = post.Excerpt,
+
+                };
+                return View(model);
+            }
+            else
+            {
+                return NotFound();
+            }
+            
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePostConfirmed(int? Id)
+        {
+            if (Id == 0)
+            {
+                return NotFound();
+            }
+            
+
+            var post = await _context.Posts.FindAsync(Id);
+
+            if (post != null)
+            {
+                _context.Posts.Remove(post);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("PostList");
+        }
         public async Task<IActionResult> CreatePost()
         {
             // Retrieve a list of categories and tags from your database
@@ -515,10 +563,16 @@ namespace RajaFath.Controllers
                     Title = model.Title,
                     Content = model.Content,
                     Author = currentUser,
+                    Excerpt = model.Excerpt,
                     CreatedDate = DateTime.Now, // Set the creation date
                     UpdatedDate = DateTime.Now, // Set the update date to the current time
                     FeaturedImage = SaveFeaturedImage(model.ImageFile)
                 };
+                if (post.Excerpt == null)
+                {
+                    post.Excerpt = GetLimitedWordsFromHtml(post.Content,15);
+                }
+                
                 _context.Posts.Add(post);
                 await _context.SaveChangesAsync();
 
@@ -530,31 +584,33 @@ namespace RajaFath.Controllers
                         var postCategory = new PostCategory
                         {
                             
-                            //PostId = post.Id,
+                            PostId = post.Id,
                             CategoryId = categoryId
                         };
                         // Add postCategory to your database
-                        
+                        _context.postCategories.Add(postCategory);
                     }
                 }
-                if (model.SelectedTagIds != null)
-                {
-                    // Add selected tags to the post
-                    foreach (var tagId in model.SelectedTagIds)
-                    {
-                        var postTag = new PostTag
-                        {
-                            Post = post,
-                            TagId = tagId
-                        };
-                        // Add postTag to your database
-                        
-                    }
-                }
+                //if (model.SelectedTag != null)
+                //{
+                //    // Add selected tags to the post
+                //    foreach (var tagId in model.SelectedTag)
+                //    {
+                //        var postTag = new PostTag
+                //        {
+                //            Post = post,
+                //            TagId = tagId
+                //        };
+                //        // Add postTag to your database
+                //        _context.postTags.Add(postTag);
+                //    }
+                //}
                 
                 _context.SaveChanges(); // Save changes to add relationships
                 // Redirect to the post details page or another appropriate action
-                return RedirectToAction("Details", new { id = post.Id });
+                var categories = await _context.Categories.ToListAsync();
+                model.AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList();
+                return View(model);
             }
 
             // If ModelState is not valid, return the view with validation errors
@@ -603,5 +659,87 @@ namespace RajaFath.Controllers
             // If ModelState is not valid, return the view with validation errors
             return View(post);
         }
+        public async Task<IActionResult> AddNewTag(PostCreateViewModel viewModel)
+        {
+            if (!string.IsNullOrEmpty(viewModel.NewTag))
+            {
+                // Add the new tag to your database (you need to implement this logic)
+                // You can use Entity Framework or any other data access method.
+                // After adding to the database, you can refresh the available tags list.
+                var tag = new Tag
+                {
+                    Name = viewModel.NewTag,
+                };
+                _context.Tags.Add(tag);
+                _context.SaveChanges();
+                
+                // dbContext.Tags.Add(new Tag { Name = viewModel.NewTag });
+                // dbContext.SaveChanges();
+
+                // Refresh available tags (retrieve them from the database)
+                var tags = await _context.Tags.ToListAsync();
+                viewModel.AvailableTags = tags.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }).ToList(); // Implement GetAvailableTags() to fetch tags from the database
+                //viewModel.SelectedTagIds
+            }
+
+            // Return the updated ViewModel to the view
+            return View("CreatePost", viewModel);
+        }
+        private string GetExcerpt(string Text)
+        {
+            if (string.IsNullOrEmpty(Text))
+            {
+                return "";
+            }
+            string PlainText = RemoveHtmlTags(Text);
+            if (string.IsNullOrEmpty(PlainText))
+            {
+                return "";
+            }
+            int limit = 15; // Change this to the desired number of words you want to extract.
+
+            string[] words = PlainText.Split(new char[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (limit <= words.Length)
+            {
+                string[] limitedWords = new string[limit];
+                Array.Copy(words, limitedWords, limit);
+
+                string limitedText = string.Join(" ", limitedWords);
+                return limitedText;
+            }
+            else
+            {
+                return PlainText;
+            }
+        }
+        private string GetLimitedWordsFromHtml(string html, int wordLimit)
+        {
+            if (string.IsNullOrEmpty(html) || wordLimit <= 0)
+                return string.Empty;
+
+            HtmlDocument htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(html);
+
+            // Remove HTML tags and entities and extract plain text
+            var textNodes = htmlDocument.DocumentNode.DescendantsAndSelf()
+                .Where(n => n.NodeType == HtmlNodeType.Text)
+                .Select(n => n.InnerHtml.Trim());
+
+            // Concatenate the plain text and split it into words
+            var plainText = string.Join(" ", textNodes);
+            var words = plainText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Take the first 'wordLimit' words
+            var limitedWords = string.Join(" ", words.Take(wordLimit));
+
+            return limitedWords;
+        }
+        private string RemoveHtmlTags(string text)
+        {
+            // Use a regular expression to remove HTML tags
+            return Regex.Replace(text, "<.*?>", "");
+        }
+
     }
 }

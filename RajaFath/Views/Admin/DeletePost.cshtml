@@ -1,0 +1,28 @@
+﻿@model RajaFath.Models.PostCreateViewModel
+@{
+    ViewData["Title"] = "DeletePost";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<h2>
+    حذف پست
+</h2>
+
+<p class="alert alert-danger" role="alert">
+   آیا از حذف این پست اطمینان دارید؟
+</p>
+
+<p><strong> عنوان:</strong> @Model.Title</p>
+<p>
+    <strong> خلاصه متن:</strong>
+    @Model.Excerpt
+</p>
+
+
+
+<form asp-action="DeletePostConfirmed" asp-route-id="@Model.PostId" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">حذف</button>
+    <a asp-action="PostList" class="btn btn-secondary">بازگشت</a>
+</form>
+

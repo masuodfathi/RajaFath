@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
 namespace RajaFath.Models
 {
@@ -16,6 +17,7 @@ namespace RajaFath.Models
 
         [Required]
         [MaxLength(5000)]
+        [AllowHtml]
         public string? Content { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }

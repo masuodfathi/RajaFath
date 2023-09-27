@@ -4,47 +4,214 @@
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 
+<style>
+    .custom-file-input {
+        position: relative;
+        overflow: hidden;
+        margin-top: 10px;
+        
+    }
 
-<h2>Create a New Post</h2>
+        .custom-file-input input[type="file"] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+        }
 
-<form asp-action="CreatePost" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="Title">Title</label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+        .custom-file-input label {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Style when a file is selected */
+        .custom-file-input input[type="file"]:focus + label,
+        .custom-file-input input[type="file"]:valid + label {
+            background-color: #e74c3c;
+        }
+        label.category{
+            position:relative;
+            width:100%;
+            background: #ccced1;
+            
+        }
+
+    .ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline{
+        height:70vh;
+    }
+
+    div.ck.ck-powered-by{
+        display:none;
+    }
+
+    #Content{
+        display:none;
+    }
+</style>
+<h2>نوشته جدید</h2>
+
+<form asp-action="CreatePost" method="post" enctype="multipart/form-data" id="createpost-form">
+    <div class="row">
+    <div class="col-md-9">
+        <div class="form-group mb-5">
+            <label asp-for="Title" class="pb-2">عنوان</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-5">
+                <label asp-for="Content" class="pb-2">متن</label>
+                <textarea id="Content" asp-for="Content" id="Content" class="ckeditor " name="Content"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-5">
+            <label>خلاصه</label>
+            <textarea asp-for="Excerpt"> </textarea>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Content">Content</label>
-        <textarea asp-for="Content" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
+    <div class="col-md-3 mt-4">
+        <div>
+            <label>@Model.CurrentUser?.UserName</label>
+            <label>@Model.UpdateDate</label>
+                <button type="submit" class="btn btn-primary">انتشار</button>
+        </div>
+            
+            <div class="col mt-2 border rounded ">
+                <label class="category rounded-top p-2">دسته بندی:</label>
+                <div class="form-group p-3">
+                    <input asp-for="SelectedCategoryIds" type="radio" value="" /> دسته بندی نشده
+                    <br />
+                    @foreach (var category in @Model.AvailableCategories)
+                    {
+                        <input asp-for="SelectedCategoryIds" type="radio" value="@category.Value" id="category@category.Id" />
+                        <label asp-for="SelectedCategoryIds" for="category@category.Id">@category.Text</label>
+                        <br />
+                    }
+                </div>
+        </div>
+        <hr />
+        <div class="col">
+                <div class="form-group custom-file-input">
+                    <label asp-for="ImageFile" class="pb-2">تصویر شاخص</label>
+                    <input asp-for="ImageFile" type="file" class="form-control-file" accept=".jpg, .png" id="featureImage" name="featureImage" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+                <div id="selectedImageContainer" class="form-group custom-file-input border rounded">
+                    <img id="selectedImage" src="#" alt="Selected Feature Image" style="display: none;" width="300" height="200">
+                </div>
+        </div>
+            
     </div>
+        
+    
+    
+    </div>
+</form>
+@* a script for showing feature Image after selection *@
+<script>
+    // Get references to the input and image elements
+    const featureImageInput = document.getElementById('featureImage');
+    const selectedImage = document.getElementById('selectedImage');
 
-    <div class="form-group">
+    // Add an event listener to the input element
+    featureImageInput.addEventListener('change', function () {
+        const file = this.files[0]; // Get the selected file
+        if (file) {
+            const reader = new FileReader();
+
+            // Configure the FileReader to display the selected image
+            reader.onload = function (e) {
+                selectedImage.src = e.target.result;
+                selectedImage.style.display = 'block'; // Show the image
+            };
+
+            // Read the selected file as a data URL
+            reader.readAsDataURL(file);
+        } else {
+            selectedImage.style.display = 'none'; // Hide the image if no file is selected
+        }
+    });
+</script>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/translations/fa.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#Content'), {
+            language:'fa',
+            height:'800px'
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+<script>
+//     $(document).ready(function () {
+//         $('#editorTabs a').on('click', function (e) {
+//             e.preventDefault();
+//             $(this).tab('show');
+//         });
+
+//         // Update the preview when switching to the Preview tab
+//         $('#editorTabs a[href="#preview"]').on('shown.bs.tab', function () {
+//             const editorData = ClassicEditor.instances.editor.getData();
+//             $('#previewContent').html(editorData);
+//         });
+//     });
+</script>
+
+@* <div class="form-group">
         <label asp-for="SelectedCategoryIds">Categories</label>
         <select asp-for="SelectedCategoryIds" asp-items="@Model.AvailableCategories" class="form-control" multiple></select>
         <span asp-validation-for="SelectedCategoryIds" class="text-danger"></span>
+    </div> *@
+
+@* tag *@
+<!-- New Tag Input Field with Add Button -->
+@* <div class="form-group">
+        <label for="SelectedTagIds">Selected Tags</label>
+        <select multiple class="form-control" id="SelectedTagIds" asp-for="SelectedTagIds"></select>
     </div>
 
+    <!-- Available Tags -->
     <div class="form-group">
-        <label asp-for="SelectedTagIds">Tags</label>
-        <select asp-for="SelectedTagIds" asp-items="@Model.AvailableTags" class="form-control" multiple></select>
-        <span asp-validation-for="SelectedTagIds" class="text-danger"></span>
-    </div>
+        <label for="AvailableTags">Available Tags</label>
+        <select multiple class="form-control" id="AvailableTags" asp-for="AvailableTags" asp-items="Model.AvailableTags"></select>
+    </div> *@
 
+
+@* End Tag *@
+@* <form asp-action="AddNewTag" method="post">
     <div class="form-group">
-        <label asp-for="ImageFile">Featured Image</label>
-        <input asp-for="ImageFile" type="file" class="form-control-file" />
-        <span asp-validation-for="ImageFile" class="text-danger"></span>
+        <label for="NewTag">New Tag</label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="NewTag" placeholder="Enter a new tag" asp-for="NewTag">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary" id="AddTagButton">Add</button>
+            </div>
+        </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Publish</button>
+    <!-- Selected Tags -->
+    <div class="form-group">
+        <label for="SelectedTagIds">Selected Tags</label>
+        <select multiple class="form-control" id="SelectedTagIds" asp-for="SelectedTagIds"></select>
+    </div>
+
+    <!-- Available Tags -->
+    <div class="form-group">
+        <label for="AvailableTags">Available Tags</label>
+        <select multiple class="form-control" id="AvailableTags" asp-for="AvailableTags"></select>
+    </div>
 </form>
-
-
-
-
-
+ *@
 @* <h1>CreatePost</h1>
 <form asp-action="CreatePost" method="post">
     <div class="form-group">
