@@ -18,11 +18,7 @@ namespace RajaFath.Models
 
         public string? Excerpt { get; set; }
         public string? Author { get; set; }
-        public DateTime UpdateDate { get; set; }
-
-        // Add other properties like excerpt, author, updated date, etc.
-
-        
+        public DateTime UpdateDate { get; set; }    
 
         [Display(Name = "Image")]
         public IFormFile? ImageFile { get; set; }
@@ -38,6 +34,7 @@ namespace RajaFath.Models
         public IdentityUser? CurrentUser { get; internal set; }
         [Display(Name = "Categories")]
         public List<int>? SelectedCategoryIds { get; set; }
-        public string? FeatureImage { get; set; }
+        public int? FeatureImageId { get; set; }
+        public List<Image>? Images { get; set; }
     }
 }

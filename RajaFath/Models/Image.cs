@@ -17,6 +17,7 @@ namespace RajaFath.Models
             public DateTime? UploadDate { get; set; }
 
             // Navigation property for the associated image-post relationships
+
             public List<ImagePost> ImagePosts { get; set; }
         }
 }

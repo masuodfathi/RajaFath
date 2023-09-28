@@ -532,19 +532,20 @@ namespace RajaFath.Controllers
         {
             // Retrieve a list of categories and tags from your database
             var categories = await _context.Categories.ToListAsync();
-            var tags = await _context.Tags.ToListAsync();
+            //var tags = await _context.Tags.ToListAsync();
 
             // Get the current user (you can use HttpContext.User.Identity)
             var currentUser = await _userManager.GetUserAsync(User);
-            
+            var images = await _context.Images.ToListAsync();
 
             var model = new PostCreateViewModel
             {
                 Categories = categories,
-                Tags = tags,
+                //Tags = tags,
                 CurrentUser = currentUser,
                 AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList(),
-                AvailableTags = tags.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }).ToList(),
+                //AvailableTags = tags.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }).ToList(),
+                Images= images,
             };
 
             return View(model);
@@ -557,6 +558,9 @@ namespace RajaFath.Controllers
             if (ModelState.IsValid)
             {
                 var currentUser = await _userManager.GetUserAsync(User);
+                
+                //string[] savedImage = SaveFeaturedImage(image);
+                
                 // Map properties from the view model to your Post model
                 var post = new Post
                 {
@@ -566,16 +570,23 @@ namespace RajaFath.Controllers
                     Excerpt = model.Excerpt,
                     CreatedDate = DateTime.Now, // Set the creation date
                     UpdatedDate = DateTime.Now, // Set the update date to the current time
-                    FeaturedImage = SaveFeaturedImage(model.ImageFile)
+                    FeaturedImageId = model.FeatureImageId,
                 };
                 if (post.Excerpt == null)
                 {
                     post.Excerpt = GetLimitedWordsFromHtml(post.Content,15);
                 }
                 
+                
                 _context.Posts.Add(post);
                 await _context.SaveChangesAsync();
-
+                var imagePost = new ImagePost
+                {
+                    ImageId = model.FeatureImageId,
+                    PostId = post.Id
+                };
+                _context.ImagePosts.Add(imagePost);
+                await _context.SaveChangesAsync();
                 if (model.SelectedCategoryIds != null)
                 {
                     // Add selected categories to the post
@@ -617,22 +628,34 @@ namespace RajaFath.Controllers
             
             return View(model);
         }
-        private string SaveFeaturedImage(IFormFile imageFile)
+        private string[] SaveFeaturedImage(ImageViewModel model)
         {
-            if (imageFile != null && imageFile.Length > 0)
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
             {
                 // Implement the logic to save the image to your desired location.
                 // For example, you can save it to the wwwroot/images folder:
                 var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                var uniqueFileName = Guid.NewGuid() + "_" + imageFile.FileName;
+                var uniqueFileName = Guid.NewGuid() + "_" + model.ImageFile.FileName;
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    imageFile.CopyTo(fileStream);
+                    model.ImageFile.CopyTo(fileStream);
                 }
-
-                return "/images/" + uniqueFileName;
+                var img = new Image 
+                {
+                    FileName = model.ImageFile.FileName,
+                    Caption = model.Caption,
+                    AltText = model.AltText,
+                    ImageUrl = "/images/" + uniqueFileName,
+                    UploadDate = DateTime.Now
+                };
+                _context.Images.Add(img);
+                _context.SaveChangesAsync();
+                int id = img.Id;
+                string address = "/images/" + uniqueFileName;
+                string[] result = [id.ToString(), address];
+                return result;
             }
             else
             {

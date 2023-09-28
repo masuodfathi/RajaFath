@@ -393,8 +393,8 @@ namespace RajaFath.Migrations
                     b.Property<string>("FacebookLink")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FeaturedImage")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("FeaturedImageId")
+                        .HasColumnType("int");
 
                     b.Property<bool?>("IsArchived")
                         .HasColumnType("bit");

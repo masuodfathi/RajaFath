@@ -17,5 +17,6 @@ namespace RajaFath.Models
 
         [Display(Name = "File Name")]
         public string FileName { get; set; }
+        
     }
 }
