@@ -60,31 +60,33 @@
         justify-content:center;
         align-items:center;
         align-content:center;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        grid-template-rows:repeat(auto-fit,minmax(150px,150px));
+        grid-template-columns: repeat(auto-fill, minmax(127px, 1fr));
+        grid-template-rows:repeat(auto-fit,minmax(127px,1fr));
         /* Adjust the minmax width as needed */
-        grid-gap: 10px;
+        
         /* Adjust the gap between tiles */
     }
 
     .image-tile {
         position: relative;
         overflow: hidden;
-        border: 2px solid transparent;
-        width:100%;
+        /* border: 2px solid transparent; */
+        width:127px;
+        height:127px;
+        padding:10px;
         
         /* Add transparent border by default */
     }
 
     .image-tile img {
         width: 100%;
-        
-        object-fit:contain;
+        height:100%;
+        object-fit:cover;
      }
 
      .image-tile.selected {
-            border-color: blue;
-            box-shadow:0 0 0 5px blue;
+            
+            box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 7px #2271b1;
             /* Add a border color for selected images */
      }
 
@@ -138,7 +140,7 @@
 
             <!--Modal Button-->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-                    Open Modal
+                    انتخاب تصویر شاخص
                 </button>
                 <div class="form-group mb-5">
                     <label asp-for="FeatureImageId" class="pb-2">تصویر شاخص</label>
@@ -156,7 +158,7 @@
             <!-- Modal Header -->
             <div class="modal-header">
                 <h5 class="modal-title">تصویر شاخص</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
 
             </div>
 
@@ -184,7 +186,7 @@
                                         {
                                             <label class="image-tile" data-image-id="@img.Id">
                                                 <input type="radio" name="selected-image" class="image-radio">
-                                                <img src="@img.ImageUrl" alt="@img.AltText" class="modal-image" width="200" height="200">
+                                                <img src="@img.ImageUrl" alt="@img.AltText" class="modal-image">
                                             </label>
                                         }
 
