@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging.Signing;
@@ -14,6 +15,8 @@ namespace RajaFath.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly SignInManager<IdentityUser> _signInManager;
+
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
@@ -21,7 +24,7 @@ namespace RajaFath.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, SignInManager<IdentityUser> signInManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -29,6 +32,7 @@ namespace RajaFath.Controllers
             _emailStore = GetEmailStore();
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _signInManager = signInManager;
         }
         public IActionResult Index()
         {
@@ -244,7 +248,7 @@ namespace RajaFath.Controllers
                     await _userManager.AddToRoleAsync(user, model.SelectedRole);
                     //Set id
                     var userId = await _userManager.GetUserIdAsync(user);
-
+                    await _signInManager.SignInAsync(user, isPersistent: false);
                     // Redirect to a success page or perform other actions
                     return RedirectToAction("ListUsers");
                 }
@@ -566,7 +570,7 @@ namespace RajaFath.Controllers
                 {
                     Title = model.Title,
                     Content = model.Content,
-                    Author = currentUser,
+                    AuthorId = currentUser.Id,
                     Excerpt = model.Excerpt,
                     CreatedDate = DateTime.Now, // Set the creation date
                     UpdatedDate = DateTime.Now, // Set the update date to the current time
@@ -621,12 +625,60 @@ namespace RajaFath.Controllers
                 // Redirect to the post details page or another appropriate action
                 var categories = await _context.Categories.ToListAsync();
                 model.AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList();
+                model.Images = await _context.Images.ToListAsync();
                 return View(model);
             }
 
             // If ModelState is not valid, return the view with validation errors
             
             return View(model);
+        }
+
+        /// ////////////////////////-----Save Image-----/////////////////////////////////////////////
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(IFormFile imageFile, string imageTitle, string imageDescription)
+        {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                // Handle the uploaded image, save it, and update the database with image details
+                // For simplicity, you can save the image to a specific directory and store the file path in the database
+
+                // Example: Save the image to the wwwroot/images directory
+                var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                var filePath = Path.Combine(uploadPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    imageFile.CopyTo(stream);
+                }
+
+                // Create an ImageModel instance and save it to the database
+                var newImage = new Image
+                {
+                    ImageUrl = $"/images/{fileName}", // Relative URL to the saved image
+                    FileName = imageTitle,
+                    Caption = imageDescription,
+                };
+
+                // Save the new image to the database using your DbContext
+                _context.Images.Add(newImage);
+                await _context.SaveChangesAsync();
+
+                // Return a JSON response with the image details
+                return Json(new
+                {
+                    success = true,
+                    newImage.ImageUrl,
+                    newImage.FileName,
+                    newImage.Caption,
+                    newImage.Id
+                });
+            }
+
+            // If no image is uploaded or if there was an error, return an error JSON response
+            return Json(new { success = false, errorMessage = "Image upload failed." });
+
         }
         private string[] SaveFeaturedImage(ImageViewModel model)
         {
@@ -664,24 +716,7 @@ namespace RajaFath.Controllers
             }
         }
 
-        public async Task<IActionResult> Create(Post post)
-        {
-            if (ModelState.IsValid)
-            {
-                // You can set other properties like CreatedDate, AuthorId, etc.
-                post.CreatedDate = DateTime.Now;
-
-                // Save the new post to the database (e.g., using Entity Framework)
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-
-                // Redirect to the list of posts or another appropriate page
-                return RedirectToAction("Index", "Post");
-            }
-
-            // If ModelState is not valid, return the view with validation errors
-            return View(post);
-        }
+        /////////////////////////////-------Tag--------/////////////////////////////////////////////
         public async Task<IActionResult> AddNewTag(PostCreateViewModel viewModel)
         {
             if (!string.IsNullOrEmpty(viewModel.NewTag))

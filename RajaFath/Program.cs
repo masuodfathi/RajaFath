@@ -18,7 +18,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
         {
             
-            options.SignIn.RequireConfirmedAccount = true;
+            options.SignIn.RequireConfirmedEmail = false;
             options.Password.RequireNonAlphanumeric=false;
             options.SignIn.RequireConfirmedAccount = false;
             

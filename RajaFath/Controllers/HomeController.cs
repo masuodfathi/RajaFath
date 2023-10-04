@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using RajaFath.Data;
 using RajaFath.Models;
 using System.Diagnostics;
@@ -26,23 +28,64 @@ namespace RajaFath.Controllers
                 new Carousel{CarouselId= 2, Title="carosel1",Description="the first description",Path="images\\slide2.jpg"},
                 new Carousel{CarouselId= 3, Title="carosel1",Description="the first description",Path="images\\slide3.jpg"},
             };
+
             if (slides.Count > 0)
             {
                 model.Carousel = slides;
             }
+
             int? IdProject = _context.Categories.Where(c => c.Name.Equals("پروژه")).FirstOrDefault().CategoryId;
+
             var postsInCategory = await _context.Posts
             .Where(p => p.PostCategory.Any(pc => pc.CategoryId == IdProject))
             .ToListAsync();
-            if (IdProject != null)
-            {
-                model.post = postsInCategory;
-            }
             
+            //if (IdProject != null)
+            //{
+                
+            //    foreach (var p in postsInCategory)
+            //    {
+            //        var newPost = new homePostViewModel();
+            //        newPost.Id = p.Id;
+            //        newPost.Title = p.Title;
+            //        newPost.Excerpt = p.Excerpt;
+            //        newPost.Category = "پروژه";
+            //        newPost.Author = GetUserOfThePost(p.Id);
+            //        newPost.ImageUrl = GetImageOfThePost(p.FeaturedImageId);
+            //        model.Projects.Append(newPost);
+            //    }
+                
+            //}
             
             return View(model);
         }
-
+        private string GetImageOfThePost(int? Id)
+        {
+            if (Id == null)
+            {
+                return string.Empty;
+            }
+            var image = _context.Images.FindAsync(Id).Result;
+            if (image == null)
+            {
+                return string.Empty;
+            }
+            return image.ImageUrl;
+        }
+        private string GetUserOfThePost(int? Id)
+        {
+            if (Id == null)
+            {
+                return string.Empty;
+            }
+            var user = _context.Users.FindAsync(Id.ToString()).Result;
+            if (user == null)
+            {
+                return string.Empty;
+            }
+            string username = user.UserName;
+            return username;    
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

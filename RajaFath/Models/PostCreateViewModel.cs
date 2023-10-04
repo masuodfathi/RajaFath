@@ -18,7 +18,8 @@ namespace RajaFath.Models
 
         public string? Excerpt { get; set; }
         public string? Author { get; set; }
-        public DateTime UpdateDate { get; set; }    
+        public DateTime? UpdateDate { get; set; }    
+        public DateTime? CreatedDate { get;set; }
 
         [Display(Name = "Image")]
         public IFormFile? ImageFile { get; set; }

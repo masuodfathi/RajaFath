@@ -21,6 +21,5 @@ html {
 }
 
 body {
-  
-  font-family: Yekan;
+  font-family: Yekan !important;
 }

@@ -25,10 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Images\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\js\HandleTag.js" />
   </ItemGroup>
 

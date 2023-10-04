@@ -3,7 +3,7 @@
     ViewData["Title"] = "CreatePost";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-
+<link rel="stylesheet" href="~/css/CreatePost.css" asp-append-version="true" />
 <style>
     .custom-file-input {
         position: relative;
@@ -71,7 +71,7 @@
         position: relative;
         overflow: hidden;
         /* border: 2px solid transparent; */
-        width:127px;
+        
         height:127px;
         padding:10px;
         
@@ -111,42 +111,65 @@
             <span asp-validation-for="Content" class="text-danger"></span>
         </div>
         <div class="form-group mb-5">
-            <label>خلاصه</label>
-            <textarea asp-for="Excerpt"> </textarea>
+                <label asp-for="Excerpt" class="form-label" class="form-control">خلاصه</label>
+                <textarea asp-for="Excerpt" name="Excerpt" class="form-control"> </textarea>
         </div>
     </div>
     <div class="col-md-3 mt-4">
-        <div>
-            <label>@Model.CurrentUser?.UserName</label>
-            <label>@Model.UpdateDate</label>
-                <button type="submit" class="btn btn-primary">انتشار</button>
+        <div id="publish" class="border rounded">
+            <label class="rounded-top p-2">انتشار</label>
+            <div class="p-3 d-flex flex-column gap-2">
+                    <label>
+                        <span>
+                            نویسنده:
+                        </span>
+                        @Model.CurrentUser?.UserName
+                    </label>
+                    <label>
+                        <span>
+                            تاریخ انتشار:
+                        </span>
+                        @((Model.CreatedDate == null) ? "--/--/--" : Model.CreatedDate)
+                    </label>
+                    <label>
+                        <span>
+                            تاریخ آخرین به روز رسانی:
+                        </span>
+                        @((Model.UpdateDate == null) ? "--/--/--" : Model.UpdateDate)
+                    </label>
+                    <button type="submit" class="btn btn-primary">انتشار</button>
+            </div>
+            
         </div>
             
             <div class="col mt-2 border rounded ">
-                <label class="category rounded-top p-2">دسته بندی:</label>
+                <label class="category rounded-top p-2">دسته بندی</label>
                 <div class="form-group p-3">
                     <input asp-for="SelectedCategoryIds" type="radio" value="" /> دسته بندی نشده
                     <br />
                     @foreach (var category in @Model.AvailableCategories)
                     {
-                        <input asp-for="SelectedCategoryIds" type="radio" value="@category.Value" id="category@category.Id" />
-                        <label asp-for="SelectedCategoryIds" for="category@category.Id">@category.Text</label>
+                        <input asp-for="SelectedCategoryIds" type="radio" value="@category.Value" id="@category.Value" />
+                        <label asp-for="SelectedCategoryIds" for="@category.Value">@category.Text</label>
                         <br />
                     }
                 </div>
         </div>
-        <hr />
         <div class="col">
-
+            <div class="featur-image-box border rounded mt-2 d-flex flex-column">
             <!--Modal Button-->
+                <label class="rounded-top p-2">تصویر شاخص</label>
+                    <img src="~/Images/default.png" alt="" id="feature-image" class="p-1" />
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
                     انتخاب تصویر شاخص
                 </button>
-                <div class="form-group mb-5">
-                    <label asp-for="FeatureImageId" class="pb-2">تصویر شاخص</label>
-                    <input type="text" asp-for="FeatureImageId" id="selected-image-id" name="FeatureImageId" />
+                
+                <div class="form-group mb-5 d-none">
+                    
+                    <input type="hidden" asp-for="FeatureImageId" id="selected-image-id" name="FeatureImageId" />
                     <span asp-validation-for="FeatureImageId" class="text-danger"></span>
                 </div>
+            </div>
         </div>
     </div>
     </div>
@@ -157,11 +180,12 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
+
                 <h5 class="modal-title">تصویر شاخص</h5>
                 <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
 
             </div>
-
+            
             <!-- Modal Body with Tabs -->
             <div class="modal-body">
                 <!-- Nav tabs -->
@@ -174,26 +198,40 @@
                     </li>
                 </ul>
                 <!-- Tab panes -->
-                <div class="tab-content pt-4">
+                <div class="tab-content pt-4" id="tab">
                     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
                         <!-- Content for Tab 1 with scrollable container -->
-                        <div class="container overflow-auto m-0">
+                        <div class="container overflow-auto m-0" id="my-container">
                             <div class="row">
-                                <div class="col-md-9">
+                                <div class="col-md-9 col-" id="gallery-wrapper">
                                     <div class="image-grid">
                                         <!-- Add images here dynamically with radio buttons -->
+                                        @if(Model.Images != null)
                                         @foreach (var img in Model.Images)
                                         {
                                             <label class="image-tile" data-image-id="@img.Id">
-                                                <input type="radio" name="selected-image" class="image-radio">
-                                                <img src="@img.ImageUrl" alt="@img.AltText" class="modal-image">
+                                                <input type="radio" name="selected-image" class="image-radio" id="image-radio-@img.Id" value="@img.Id">
+                                                <img src="@img.ImageUrl" alt="@img.AltText? @img.AltText: '1' " class="modal-image">
                                             </label>
                                         }
 
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 d-none d-sm-block" id="modal-sidebar">
                                     <p>Display image ditails</p>
+                                    <form id="image-details-form">
+                                        <div class="mb-3">
+                                            <label for="image-title" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="image-title" name="imageTitle">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="image-description" class="form-label">Description</label>
+                                            <textarea class="form-control" id="image-description" name="imageDescription"></textarea>
+                                        </div>
+                                        <!-- Add more fields for image details as needed -->
+                                        <!-- Save button to save changes -->
+                                        <button type="button" id="save-image-details" class="btn btn-success">Save</button>
+                                    </form>
                                 </div>
                             </div>
 
@@ -204,6 +242,26 @@
                         <div class="container overflow-auto">
                             <div class="row">
                                 <div class="col">
+
+                                    <!-- Form for uploading image in second tab-->
+                                    <form id="image-upload-form" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label for="image-title" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="image-title" name="imageTitle">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="image-description" class="form-label">Description</label>
+                                            <textarea class="form-control" id="image-description" name="imageDescription"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="image-file" class="form-label">Select Image:</label>
+                                            <input type="file" class="form-control" id="image-file" name="imageFile">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+
+                                    
+                                    
                                 </div>
                             </div>
                         </div>
@@ -213,8 +271,8 @@
 
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-                <button type="button" class="btn btn-primary">قرار دادن به عنوان تصویر شاخص</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal-cancel">انصراف</button>
+                <button type="button" class="btn btn-primary" id="approve" data-bs-dismiss="modal">قرار دادن به عنوان تصویر شاخص</button>
             </div>
         </div>
     </div>
@@ -242,4 +300,4 @@
 <!--
      // JavaScript to handle modal image selection
 -->
-<script src="~/js/JavaScript.js"></script>
+<script src="~/js/MyJs.js"></script>

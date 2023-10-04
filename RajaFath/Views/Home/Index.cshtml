@@ -55,8 +55,11 @@
 </div>
 
 @* projects --------------------------------- *@
+@if (Model.Projects != null)
+{
+    <partial name="_homeprojects" model="Model.Projects" />
 
-<partial name="_homeprojects" model="Model.post"/>
+}
 
 @* Activitis --------------------------------------------*@
 
