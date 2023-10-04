@@ -362,4 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-/Images/
+# Ignore the wwwroot/images folder
+RajaFath/wwwroot/images/
+
+# Other rules...
