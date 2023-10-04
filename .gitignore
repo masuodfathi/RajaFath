@@ -363,6 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Ignore the wwwroot/images folder
-RajaFath/wwwroot/images/
+/wwwroot/images/
 
 # Other rules...
