@@ -13,7 +13,7 @@
         @foreach (var item in Model)
         {
             <div class="d-flex flex-column justify-content-center align-items-center col-md-4">
-                <img src="" alt="" class="rounded-circle mx-auto d-block object-fit-cover my-round-img" />
+                <img src="@item.FeaturedImage?.ImageUrl" alt="@item.FeaturedImage?.AltText" class="rounded-circle mx-auto d-block object-fit-cover my-round-img" />
                 <h3 class="pt-3 pb-2">@item.Title</h3>
                 <p>@item.Excerpt</p>
             </div>

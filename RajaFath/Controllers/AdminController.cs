@@ -570,7 +570,7 @@ namespace RajaFath.Controllers
                 {
                     Title = model.Title,
                     Content = model.Content,
-                    AuthorId = currentUser.Id,
+                    AuthorId = currentUser?.Id,
                     Excerpt = model.Excerpt,
                     CreatedDate = DateTime.Now, // Set the creation date
                     UpdatedDate = DateTime.Now, // Set the update date to the current time

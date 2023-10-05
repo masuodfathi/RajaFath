@@ -24,7 +24,7 @@ namespace RajaFath.Models
         public string? AuthorId { get; set; } // Reference to the author's user ID
         public string? Excerpt { get; set; } // A short teaser or summary of the post
         public int? FeaturedImageId { get; set; } // URL or file path to a featured image
-
+        public Image? FeaturedImage { get; set; }
         // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
         // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
         // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties

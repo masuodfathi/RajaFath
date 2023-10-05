@@ -10,6 +10,14 @@ namespace RajaFath.Data
         {
            
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.FeaturedImage)
+                .WithMany()
+                .HasForeignKey(p => p.FeaturedImageId);
+        }
         public DbSet<Image>? Images { get; set; }
         public DbSet<Post>? Posts { get; set; }
         public DbSet<Comment>? Comments { get; set; }

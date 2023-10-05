@@ -39,10 +39,10 @@ namespace RajaFath.Controllers
             var postsInCategory = await _context.Posts
             .Where(p => p.PostCategory.Any(pc => pc.CategoryId == IdProject))
             .ToListAsync();
-            
+
             //if (IdProject != null)
             //{
-                
+
             //    foreach (var p in postsInCategory)
             //    {
             //        var newPost = new homePostViewModel();
@@ -54,9 +54,18 @@ namespace RajaFath.Controllers
             //        newPost.ImageUrl = GetImageOfThePost(p.FeaturedImageId);
             //        model.Projects.Append(newPost);
             //    }
-                
+
             //}
-            
+            var postsWithImages = _context.Posts
+                .Where(post => post.PostCategory.Any(pc => pc.CategoryId == IdProject))
+                .OrderByDescending(p => p.CreatedDate)
+                .Take(3)
+                .Include(p => p.FeaturedImage) // Eager load the related image
+                .ToList();
+            if (postsWithImages != null)
+            {
+                model.Projects = postsWithImages;
+            }
             return View(model);
         }
         private string GetImageOfThePost(int? Id)
