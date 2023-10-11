@@ -15,8 +15,8 @@ namespace RajaFath.Models
         [MaxLength(100)]
         public string? Title { get; set; }
 
-        [Required]
-        [MaxLength(5000)]
+        
+        [MaxLength(10000)]
         [AllowHtml]
         public string? Content { get; set; }
         public DateTime? CreatedDate { get; set; }

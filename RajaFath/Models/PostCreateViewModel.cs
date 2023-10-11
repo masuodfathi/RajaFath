@@ -8,14 +8,13 @@ namespace RajaFath.Models
     public class PostCreateViewModel
     {
         public int? PostId { get; set; }
+        
+        [Required(ErrorMessage = "عنوان نمی‌تواند خالی باشد.")]
         [MaxLength(100)]
-        public string? Title { get; set; }
-
+        public string Title { get; set; }
         [AllowHtml]
         [MaxLength(50000)]
         public string? Content { get; set; }
-
-
         public string? Excerpt { get; set; }
         public string? Author { get; set; }
         public DateTime? UpdateDate { get; set; }    
@@ -36,6 +35,7 @@ namespace RajaFath.Models
         [Display(Name = "Categories")]
         public List<int>? SelectedCategoryIds { get; set; }
         public int? FeatureImageId { get; set; }
+        public Image? FeatureImage { get; set; }
         public List<Image>? Images { get; set; }
     }
 }
