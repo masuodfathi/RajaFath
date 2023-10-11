@@ -4,118 +4,33 @@
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <link rel="stylesheet" href="~/css/CreatePost.css" asp-append-version="true" />
-<style>
-    .custom-file-input {
-        position: relative;
-        overflow: hidden;
-        margin-top: 10px;
-        
-    }
-
-        .custom-file-input input[type="file"] {
-            position: absolute;
-            top: 0;
-            right: 0;
-            margin: 0;
-            padding: 0;
-            font-size: 20px;
-            cursor: pointer;
-            opacity: 0;
-        }
-
-        .custom-file-input label {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        /* Style when a file is selected */
-        .custom-file-input input[type="file"]:focus + label,
-        .custom-file-input input[type="file"]:valid + label {
-            background-color: #e74c3c;
-        }
-        label.category{
-            position:relative;
-            width:100%;
-            background: #ccced1;
-            
-        }
-
-    .ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline{
-        height:70vh;
-    }
-
-    div.ck.ck-powered-by{
-        display:none;
-    }
-
-    #Content{
-        display:none;
-    }
-
-    .image-grid {
-        display: grid;
-        justify-content:center;
-        align-items:center;
-        align-content:center;
-        grid-template-columns: repeat(auto-fill, minmax(127px, 1fr));
-        grid-template-rows:repeat(auto-fit,minmax(127px,1fr));
-        /* Adjust the minmax width as needed */
-        
-        /* Adjust the gap between tiles */
-    }
-
-    .image-tile {
-        position: relative;
-        overflow: hidden;
-        /* border: 2px solid transparent; */
-        
-        height:127px;
-        padding:10px;
-        
-        /* Add transparent border by default */
-    }
-
-    .image-tile img {
-        width: 100%;
-        height:100%;
-        object-fit:cover;
-     }
-
-     .image-tile.selected {
-            
-            box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 7px #2271b1;
-            /* Add a border color for selected images */
-     }
-
-    .image-radio {
-        display:none;
-    }
-</style>
 <h2>نوشته جدید</h2>
 
 <form asp-action="CreatePost" method="post" enctype="multipart/form-data" id="createpost-form">
-    <div class="row">
+    @if (Model.PostId.HasValue)
+    {
+        <input asp-for="PostId" name="PostId" type="hidden" value="@Model.PostId" />
+    }
+    <div class="row pt-3">
     <div class="col-md-9">
         <div class="form-group mb-5">
-            <label asp-for="Title" class="pb-2">عنوان</label>
-            <input asp-for="Title" class="form-control" />
+            <label asp-for="Title" class="pb-2 d-none"></label>
+            <input asp-for="Title" class="form-control" placeholder="عنوان"/>
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-5">
-                <label asp-for="Content" class="pb-2">متن</label>
-                <textarea id="Content" asp-for="Content" id="Content" class="ckeditor " name="Content"></textarea>
-            <span asp-validation-for="Content" class="text-danger"></span>
+                <label asp-for="Content" class="pb-2 visually-hidden"></label>
+                <textarea id="Content" asp-for="Content" class="ckeditor" name="Content" readonly></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
         </div>
         <div class="form-group mb-5">
-                <label asp-for="Excerpt" class="form-label" class="form-control">خلاصه</label>
-                <textarea asp-for="Excerpt" name="Excerpt" class="form-control"> </textarea>
+                <label asp-for="Excerpt" class="form-label" class="form-control">خلاصه:</label>
+                <textarea asp-for="Excerpt" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Excerpt" class="text-danger"></span>
         </div>
     </div>
-    <div class="col-md-3 mt-4">
+    <div class="col-md-3">
         <div id="publish" class="border rounded">
             <label class="rounded-top p-2">انتشار</label>
             <div class="p-3 d-flex flex-column gap-2">
@@ -123,15 +38,17 @@
                         <span>
                             نویسنده:
                         </span>
-                        @Model.CurrentUser?.UserName
+                        @(Model.Author==null?Model.CurrentUser?.UserName:Model.Author)
                     </label>
-                    <label>
+                    <input asp-for="Author" name="Author" type="hidden" value="@Model.Author" />
+                    <label asp-for="CreatedDate">
                         <span>
                             تاریخ انتشار:
                         </span>
                         @((Model.CreatedDate == null) ? "--/--/--" : Model.CreatedDate)
                     </label>
-                    <label>
+                    <input asp-for="CreatedDate" name="CreatedDate" type="hidden" value="@Model.CreatedDate" />
+                    <label asp-for="UpdateDate">
                         <span>
                             تاریخ آخرین به روز رسانی:
                         </span>
@@ -145,11 +62,12 @@
             <div class="col mt-2 border rounded ">
                 <label class="category rounded-top p-2">دسته بندی</label>
                 <div class="form-group p-3">
-                    <input asp-for="SelectedCategoryIds" type="radio" value="" /> دسته بندی نشده
-                    <br />
+                    
+                    
+                    @if(Model.AvailableCategories != null)
                     @foreach (var category in @Model.AvailableCategories)
                     {
-                        <input asp-for="SelectedCategoryIds" type="radio" value="@category.Value" id="@category.Value" />
+                        <input asp-for="SelectedCategoryIds" type="radio" value="@category.Value" id="@category.Value" checked="@category.Selected"/>
                         <label asp-for="SelectedCategoryIds" for="@category.Value">@category.Text</label>
                         <br />
                     }
@@ -159,7 +77,7 @@
             <div class="featur-image-box border rounded mt-2 d-flex flex-column">
             <!--Modal Button-->
                 <label class="rounded-top p-2">تصویر شاخص</label>
-                    <img src="~/Images/default.png" alt="" id="feature-image" class="p-1" />
+                    <img src="@(Model.FeatureImageId == null ? "/Images/default.png" : Model.FeatureImage?.ImageUrl)" alt="" id="feature-image" class="p-1" />
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
                     انتخاب تصویر شاخص
                 </button>
@@ -278,26 +196,12 @@
     </div>
 </div>
 
-
-
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/translations/fa.js"></script>
-
-<!--
-    CkEditor Script to show it against textarea
--->
-<script>
-    ClassicEditor
-        .create(document.querySelector('#Content'), {
-            language:'fa',
-            height:'800px'
-        })
-        .catch(error => {
-            console.error(error);
-        });
-</script>
-
 <!--
      // JavaScript to handle modal image selection
 -->
-<script src="~/js/MyJs.js"></script>
+@section Scripts {
+    <script src="~/js/MyJs.js" asp-append-version="true"></script>
+    <script src="https://cdn.tiny.cloud/1/2gt3rvy0o7m1u6jkelukndmaeb0kfj47zh7ia7ye1eo0vw1k/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="~/js/TinyHandler.js" asp-append-version="true"></script>
+    <script src="~/js/tinyfa.js"></script>
+}
