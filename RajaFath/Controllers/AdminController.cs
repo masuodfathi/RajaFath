@@ -1,15 +1,18 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using NuGet.Packaging.Signing;
 using RajaFath.Data;
 using RajaFath.Models;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace RajaFath.Controllers
 {
@@ -22,9 +25,10 @@ namespace RajaFath.Controllers
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _contextGet;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, SignInManager<IdentityUser> signInManager)
+        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, SignInManager<IdentityUser> signInManager,ApplicationDbContext contextGet)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -33,6 +37,7 @@ namespace RajaFath.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
             _signInManager = signInManager;
+            _contextGet = contextGet;
         }
         public IActionResult Index()
         {
@@ -532,108 +537,229 @@ namespace RajaFath.Controllers
             }
             return RedirectToAction("PostList");
         }
-        public async Task<IActionResult> CreatePost()
+        [HttpGet]
+        public async Task<IActionResult> CreatePost(int? Id)
         {
-            // Retrieve a list of categories and tags from your database
-            var categories = await _context.Categories.ToListAsync();
-            //var tags = await _context.Tags.ToListAsync();
+            
+                // Retrieve a list of categories and tags from your database
+                var categories = await _context.Categories.ToListAsync();
+                //var tags = await _context.Tags.ToListAsync();
 
-            // Get the current user (you can use HttpContext.User.Identity)
-            var currentUser = await _userManager.GetUserAsync(User);
-            var images = await _context.Images.ToListAsync();
+                // Get the current user (you can use HttpContext.User.Identity)
+                var currentUser = await _userManager.GetUserAsync(User);
+                var images = await _context.Images.ToListAsync();
+                
+                var Model = new PostCreateViewModel
+                {
+                    Categories = categories,
+                    //Tags = tags,
+                    CurrentUser = currentUser,
+                    AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList(),
+                    //AvailableTags = tags.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }).ToList(),
+                    Images = images,
+                };
 
-            var model = new PostCreateViewModel
-            {
-                Categories = categories,
-                //Tags = tags,
-                CurrentUser = currentUser,
-                AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList(),
-                //AvailableTags = tags.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }).ToList(),
-                Images= images,
-            };
-
-            return View(model);
+                return View(Model);
+            
+            
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePost(PostCreateViewModel model)
         {
-            if (ModelState.IsValid)
+            if (model.PostId.HasValue)
             {
-                var currentUser = await _userManager.GetUserAsync(User);
-                
-                //string[] savedImage = SaveFeaturedImage(image);
-                
-                // Map properties from the view model to your Post model
-                var post = new Post
+                if (ModelState.IsValid)
                 {
-                    Title = model.Title,
-                    Content = model.Content,
-                    AuthorId = currentUser?.Id,
-                    Excerpt = model.Excerpt,
-                    CreatedDate = DateTime.Now, // Set the creation date
-                    UpdatedDate = DateTime.Now, // Set the update date to the current time
-                    FeaturedImageId = model.FeatureImageId,
-                };
-                if (post.Excerpt == null)
-                {
-                    post.Excerpt = GetLimitedWordsFromHtml(post.Content,15);
-                }
-                
-                
-                _context.Posts.Add(post);
-                await _context.SaveChangesAsync();
-                var imagePost = new ImagePost
-                {
-                    ImageId = model.FeatureImageId,
-                    PostId = post.Id
-                };
-                _context.ImagePosts.Add(imagePost);
-                await _context.SaveChangesAsync();
-                if (model.SelectedCategoryIds != null)
-                {
-                    // Add selected categories to the post
-                    foreach (var categoryId in model.SelectedCategoryIds)
+                    var existPost = _context.Posts.Find(model.PostId);
+                    if (existPost != null)
                     {
-                        var postCategory = new PostCategory
-                        {
-                            
-                            PostId = post.Id,
-                            CategoryId = categoryId
-                        };
-                        // Add postCategory to your database
-                        _context.postCategories.Add(postCategory);
+                        // Map properties from the view model to your Post model
+                        var updatedpost = MakeUpdateExistPostFromModel(model, existPost);
+
+                        if (model.SelectedCategoryIds != null)
+                            await UpdatePostCategoriesAsync(existPost.Id, model.SelectedCategoryIds);
+
+                        _context.Posts.Update(updatedpost);
+                        await _context.SaveChangesAsync();
+
+                        ModelState.Remove("Excerpt");
+                        
+
+                        model = await CreatePostViewModelAsync(updatedpost);
+                        return View(model);
                     }
+                    // update model with saved post
+
+                    return RedirectToAction("PostList");
                 }
-                //if (model.SelectedTag != null)
-                //{
-                //    // Add selected tags to the post
-                //    foreach (var tagId in model.SelectedTag)
-                //    {
-                //        var postTag = new PostTag
-                //        {
-                //            Post = post,
-                //            TagId = tagId
-                //        };
-                //        // Add postTag to your database
-                //        _context.postTags.Add(postTag);
-                //    }
-                //}
-                
-                _context.SaveChanges(); // Save changes to add relationships
-                // Redirect to the post details page or another appropriate action
-                var categories = await _context.Categories.ToListAsync();
-                model.AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList();
-                model.Images = await _context.Images.ToListAsync();
+                model = await CreateRawModelFromModel(model);
                 return View(model);
             }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    var currentUser = await _userManager.GetUserAsync(User);
 
-            // If ModelState is not valid, return the view with validation errors
-            
-            return View(model);
+                    // Map properties from the view model to your Post model
+                    var post = MakeNewPostFromModel(model, currentUser.Id);
+
+                    await _context.Posts.AddAsync(post);
+                    await _context.SaveChangesAsync();
+
+                    if (model.SelectedCategoryIds != null)
+                    {
+                        // Add selected categories to the post
+                        await UpdatePostCategoriesAsync(post.Id, model.SelectedCategoryIds);
+                    }
+                    
+                    
+                    ModelState.Remove("Excerpt");
+                    
+                    
+                    model = await CreatePostViewModelAsync(post);
+                    
+                    return View(model);
+                }
+                model = await CreateRawModelFromModel(model);
+                return View(model);
+            }
         }
 
+        private async Task<PostCreateViewModel> CreateRawModelFromModel(PostCreateViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            model.Author = currentUser.UserName;
+            var categories = await _context.Categories.ToListAsync();
+            model.AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList();
+            model.Images = await _context.Images.ToListAsync();
+            model.FeatureImage = await _context.Images.FindAsync(model.FeatureImageId);
+            //if (model.SelectedCategoryIds == null)
+            //{
+            //    model.SelectedCategoryIds = new List<int> { 5 }; // Initialize the list with a single value
+            //}
+            return model;
+        }
+
+        private async Task<PostCreateViewModel> CreatePostViewModelAsync(Post post)
+        {
+            var model = new PostCreateViewModel();
+            var categories = await _context.Categories.ToListAsync();
+
+            model.Title = post.Title;
+            model.Content = post.Content;
+            var postCategory = await _context.postCategories.FirstOrDefaultAsync(c => c.PostId == post.Id);
+
+            
+            
+
+            model.AvailableCategories = categories.Select(c => 
+                new SelectListItem 
+                    { 
+                        Value = c.CategoryId.ToString(),
+                        Text = c.Name,
+                        Selected = postCategory != null && c.CategoryId == postCategory.CategoryId
+                    })
+                .ToList();
+
+            model.Images = await _context.Images.ToListAsync();
+            model.CreatedDate = post.CreatedDate;
+            model.UpdateDate = post.UpdatedDate;
+            model.Excerpt = post.Excerpt;
+            model.PostId = post.Id;
+            model.FeatureImage = post?.FeaturedImage;
+            model.FeatureImageId =post?.FeaturedImageId;
+            
+            //model.SelectedCategoryIds.Add(postCategory.CategoryId);
+            var user = await _userManager.FindByIdAsync(post.AuthorId);
+            if (user != null)
+            {
+                model.Author = user.UserName;
+            }
+
+            //var postCategory = await _context.postCategories.FirstOrDefaultAsync(c => c.PostId == post.Id);
+            //if (postCategory != null)
+            //{
+            //    model.SelectedCategoryIds = new List<int> { postCategory.CategoryId };
+            //}
+            
+
+            
+            return model;
+        }
+        private Post MakeUpdateExistPostFromModel(PostCreateViewModel model,Post ExistPost)
+        {
+            
+            var post = ExistPost;
+
+            if(model.Title != ExistPost.Title)
+                post.Title = model.Title;
+            if(model.Content !=  ExistPost.Content)
+                post.Content = model.Content;
+            if(model.FeatureImageId != ExistPost.FeaturedImageId)
+                post.FeaturedImageId = model.FeatureImageId;
+            post.UpdatedDate = DateTime.Now;
+
+            if (model.Excerpt != ExistPost.Excerpt)
+                if (model.Excerpt == null)
+                {
+                    if(model.Content != null)
+                    post.Excerpt = GetLimitedWordsFromHtml(model.Content, 15);
+                }
+                else
+                {
+                    post.Excerpt = GetLimitedWordsFromHtml(model.Excerpt, 15);
+                }
+                    
+
+            return post;
+        }
+        private Post MakeNewPostFromModel(PostCreateViewModel model,string AuthorId)
+        {
+
+            var post = new Post
+            {
+                Title = model.Title,
+                Content = model.Content,
+                FeaturedImageId = model.FeatureImageId,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now,
+                AuthorId = AuthorId,
+                FeaturedImage = model.FeatureImage,
+            };
+            if (model.Excerpt == null)
+            {
+                if (model.Content != null)
+                {
+                    post.Excerpt = GetLimitedWordsFromHtml(model.Content, 15);
+                }
+            }
+            else
+            {
+                post.Excerpt = GetLimitedWordsFromHtml(model.Excerpt, 15);
+            }
+
+            return post;
+        }
+        private async Task UpdatePostCategoriesAsync(int postId, List<int> newCategories)
+        {
+            // Remove existing categories asynchronously
+            var existingCategories = await _context.postCategories
+                .Where(pc => pc.PostId == postId)
+                .ToListAsync();
+            if(existingCategories != null && existingCategories.Count > 0)
+                _context.postCategories.RemoveRange(existingCategories);
+
+            // Add new categories asynchronously
+            foreach (var category in newCategories)
+            {
+                _context.postCategories.Add(new PostCategory {PostId = postId , CategoryId = category});
+            }
+
+            await _context.SaveChangesAsync();
+        }
         /// ////////////////////////-----Save Image-----/////////////////////////////////////////////
         [HttpPost]
         public async Task<IActionResult> UploadImage(IFormFile imageFile, string imageTitle, string imageDescription)
@@ -771,6 +897,7 @@ namespace RajaFath.Controllers
                 return PlainText;
             }
         }
+        
         private string GetLimitedWordsFromHtml(string html, int wordLimit)
         {
             if (string.IsNullOrEmpty(html) || wordLimit <= 0)
@@ -782,7 +909,7 @@ namespace RajaFath.Controllers
             // Remove HTML tags and entities and extract plain text
             var textNodes = htmlDocument.DocumentNode.DescendantsAndSelf()
                 .Where(n => n.NodeType == HtmlNodeType.Text)
-                .Select(n => n.InnerHtml.Trim());
+                .Select(n => n.InnerHtml.Replace("&nbsp;", " ").Trim());
 
             // Concatenate the plain text and split it into words
             var plainText = string.Join(" ", textNodes);
