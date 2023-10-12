@@ -21,10 +21,11 @@ namespace RajaFath.Models
         public string? Content { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public string? AuthorId { get; set; } // Reference to the author's user ID
         public string? Excerpt { get; set; } // A short teaser or summary of the post
         public int? FeaturedImageId { get; set; } // URL or file path to a featured image
         public Image? FeaturedImage { get; set; }
+        public string? AuthorId { get; set; } // Reference to the author's user ID
+        public IdentityUser? Author { get; set; }// Navigation property for the author
         // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
         // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
         // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
@@ -36,8 +37,7 @@ namespace RajaFath.Models
         public string? MetaTitle { get; set; } // Meta title for SEO
         public string? MetaDescription { get; set; } // Meta description for SEO
         public string? CanonicalUrl { get; set; } // Canonical URL for SEO
-        public bool? IsFeatured { get; set; } // Whether the post is featured
-        public string? AuthorBio { get; set; } // Short bio of the post author
+        
         public string? SourceUrl { get; set; } // URL or source reference for the content
         public bool? IsCommentEnabled { get; set; } // Whether comments are enabled for the post
         public bool? IsArchived { get; set; } // Whether the post is archived
@@ -45,8 +45,7 @@ namespace RajaFath.Models
         public TimeSpan? ReadingTime { get; set; } // Estimated reading time for the post
         
 
-        // Navigation property for the author
-        public IdentityUser? Author { get; set; }
+        
 
         // Navigation property for comments (assuming you have a Comment model)
         public List<Comment>? Comments { get; set; }
