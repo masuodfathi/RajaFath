@@ -352,9 +352,6 @@ namespace RajaFath.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AuthorBio")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
 
@@ -405,9 +402,6 @@ namespace RajaFath.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsCommentEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsFeatured")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsImageGallery")

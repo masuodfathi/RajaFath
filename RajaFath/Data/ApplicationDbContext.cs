@@ -17,6 +17,10 @@ namespace RajaFath.Data
                 .HasOne(p => p.FeaturedImage)
                 .WithMany()
                 .HasForeignKey(p => p.FeaturedImageId);
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.Author)
+                .WithMany()
+                .HasForeignKey(p => p.AuthorId);
         }
         public DbSet<Image>? Images { get; set; }
         public DbSet<Post>? Posts { get; set; }
