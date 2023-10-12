@@ -1,0 +1,101 @@
+﻿<!-- _AdminLayout.cshtml -->
+
+<!DOCTYPE html>
+<html lang="fr" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RajaFath</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="~/css/sidebar.css" asp-append-version="true" rel="stylesheet" />
+    <style>
+        
+        .nav{
+            padding-right:0;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Sidebar -->
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 text-white min-vh-100">
+                    
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="/Admin/Index" class="nav-link align-middle px-0 text-light">
+                                <i class="fs-4 bi bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">داشبورد</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Admin/ListRoles" class="nav-link px-0 align-middle text-light">
+                                <i class="fs-4 bi bi-key"></i> <span class="ms-1 d-none d-sm-inline">مدیریت نقش ها</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Admin/ListUsers" class="nav-link px-0 align-middle text-light">
+                                <i class="fs-4 bi bi-person-gear"></i> <span class="ms-1 d-none d-sm-inline">مدیریت کاربران</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Admin/PostList" class="nav-link px-0 align-middle text-light">
+                                <i class="fs-4 bi bi-pin-angle"></i> <span class="ms-1 d-none d-sm-inline">نوشته ها</span>
+                            </a>
+                            <ul class="collapse show nav flex-column me-3" id="submenu1" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="/Admin/PostList" class="nav-link px-0 text-light"><i class="fs-4 bi bi-files"></i><span class="d-none d-sm-inline">همه نوشته ها</span></a>
+                                </li>
+                                <li>
+                                    <a href="/Admin/CreatePost" class="nav-link px-0 text-light"><i class="bi bi-file-plus" style="font-size:1.4rem"></i><span class="d-none d-sm-inline">افزودن نوشته</span></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <!-- Page Content -->
+            
+            <main role="main" class="col p-0 ">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light bg-dark">
+
+                    <div class="container-fluid bg-dark gap-3">
+                        <div>
+                            <a href="/" class="btn fw-lighter text-light px-0">
+                                <i class="bi bi-arrow-bar-right"></i>
+                                بازگشت به سایت
+                            </a>
+                        </div>
+                        <div class="sidebar-header m-0 text-light">
+                            <h3 class="m-0">پنل مدیریت</h3>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Main Content -->
+                <div class="container py-4">
+                    <!-- Content of the admin page goes here -->
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Add Bootstrap and jQuery scripts (you may need to adjust the paths) -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
