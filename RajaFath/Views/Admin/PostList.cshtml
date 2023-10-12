@@ -1,7 +1,8 @@
-﻿@model IEnumerable<RajaFath.Models.Post>
+﻿@model RajaFath.Models.PostList
 @{
     ViewData["Title"] = "PostList";
-    Layout = "~/Views/Shared/_adminLayout.cshtml";
+    Layout = "~/Views/Shared/_NavSideBar.cshtml";
+    int totalPages = (int)Math.Ceiling(Model.TotalPosts / (double)Model.PageSize);
 }
 
 
@@ -11,70 +12,69 @@
 </h1>
 
 <p>
-    <a asp-action="Create">
+    <a asp-action="CreatePost">
         ایجاد نوشته
     </a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Excerpt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AuthorId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsPublished)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Views)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CommentCount)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="table-container table-responsive">
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <th>
-                    @Html.DisplayFor(model => item.Title)
-                </th>
-                <th>
-                    @Html.DisplayFor(model => item.Excerpt)
-                </th>
-                <th>
-                    @Html.DisplayFor(model => item.UpdatedDate)
-                </th>
-                <th>
-                    @Html.DisplayFor(model => item.AuthorId)
-                </th>
-                <th>
-                    @Html.DisplayFor(model => item.IsPublished)
-                </th>
-                <th>
-                    @Html.DisplayFor(model => item.Views)
-                </th>
-                <th>
-                    @Html.DisplayFor(model => item.CommentCount)
-                </th>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="DeletePost" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th>@Html.DisplayNameFor(model => model.Posts[0].Title)</th>
+                <th>@Html.DisplayNameFor(model => model.Posts[0].Excerpt)</th>
+                <th>@Html.DisplayNameFor(model => model.Posts[0].AuthorName)</th>
+                <th>@Html.DisplayNameFor(model => model.Posts[0].UpdateDate)</th>
+                <th>Actions</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Posts)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(model => item.Title)</td>
+                    <td>@Html.DisplayFor(model => item.Excerpt)</td>
+                    <td>@Html.DisplayFor(model => item.AuthorName)</td>
+                    <td>@Html.DisplayFor(model => item.UpdateDate)</td>
+                    
+                    
+                    
+                    
+                    <td>
+                        <a asp-action="CreatePost" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="DeletePost" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @if (Model.PageNumber > 1)
+        {
+            <li class="page-item"><a class="page-link" href="?page=@(Model.PageNumber - 1)">قبلی</a></li>
         }
-    </tbody>
-</table>
+        else
+        {
+            <li class="page-item disabled"><span class="page-link" aria-disabled="true">قبلی</span></li>
+        }
 
+        @for (int pageNumber = 1; pageNumber <= totalPages; pageNumber++)
+        {
+            <li class="page-item @(pageNumber == Model.PageNumber ? "active" : "")">
+                <a class="page-link" href="?page=@pageNumber">@pageNumber</a>
+            </li>
+        }
 
+        @if (Model.PageNumber < totalPages)
+        {
+            <li class="page-item"><a class="page-link" href="?page=@(Model.PageNumber + 1)">بعدی</a></li>
+        }
+        else
+        {
+            <li class="page-item disabled"><span class="page-link" aria-disabled="true">بعدی</span></li>
+        }
+    </ul>
+</nav>
