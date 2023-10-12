@@ -273,44 +273,7 @@ namespace RajaFath.Controllers
             }).ToList();
             return View(model);
         }
-        //public async Task<IActionResult> EditUser(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var user = await _userManager.FindByIdAsync(id);
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var roles = await _userManager.GetRolesAsync(user);
-        //    var userWithRoles = new UserListViewModel
-        //    {
-        //        UserId = user.Id,
-        //        UserName = user.UserName,
-        //        Email = user.Email,
-        //        Role = roles.FirstOrDefault() // Assuming a user can have only one role
-        //    };
-
-
-
-        //    var roleNames = _roleManager.Roles.Select(role => role.Name).ToList();
-
-        //    var model = new UserListViewModel
-        //    {
-        //        UserId = user.Id,
-        //        UserName = user.UserName,
-        //        Email = user.Email,
-        //        // Assuming you have a property in your EditUserViewModel for RoleList
-        //        RoleList = new SelectList(roleNames, userWithRoles.Role) // userRole is the user's current role
-        //    };
-        //    return View(model);
-        //}
-
-        [HttpGet]
+        
         [HttpGet]
         public async Task<IActionResult> EditUser(string id)
         {
@@ -487,11 +450,38 @@ namespace RajaFath.Controllers
 
 
         ////////////////post/////////////////////
-        public async Task<IActionResult> PostList()
+        public async Task<IActionResult> PostList(int? page)
         {
-            return _context.Posts != null ?
-                        View(await _context.Posts.ToListAsync()) :
-                        Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
+            int pageSize = 10;
+            int pageNumber = page ?? 1; // Get the current page number from the request, default to 1 if not provided
+
+            
+            var posts = await _context.Posts
+                .Include(p => p.Author) // Load related User data
+                .OrderByDescending(p => p.UpdatedDate)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            var postViewModels = posts.Select(p => new PostInListViewModel
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Excerpt = p.Excerpt,
+                AuthorName = p.Author?.UserName, // Access the related user's username
+                UpdateDate = p.UpdatedDate,
+            }).ToList();
+
+            var model = new PostList
+            {
+                Posts = postViewModels,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPosts = _context.Posts.Count() // Include the total count for pagination
+            };
+
+
+            return View(model);
+            
         }
         [HttpGet]
         public async Task<IActionResult> DeletePost(int? Id)
@@ -540,6 +530,16 @@ namespace RajaFath.Controllers
         [HttpGet]
         public async Task<IActionResult> CreatePost(int? Id)
         {
+            var post = await _context.Posts.FindAsync(Id);
+            if (post != null)
+            {
+                var model = await CreatePostViewModelAsync(post);
+                return View(model);
+            }
+            else
+            {
+                return NotFound();
+            }
             
                 // Retrieve a list of categories and tags from your database
                 var categories = await _context.Categories.ToListAsync();
@@ -614,6 +614,16 @@ namespace RajaFath.Controllers
                         // Add selected categories to the post
                         await UpdatePostCategoriesAsync(post.Id, model.SelectedCategoryIds);
                     }
+                    else
+                    {
+                        var uncategorized = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "دسته بندی نشده");
+                        if (uncategorized != null)
+                        {
+                            List<int> u = new List<int> { uncategorized.CategoryId };
+                            await UpdatePostCategoriesAsync(post.Id, u);
+                        }
+                        
+                    }
                     
                     
                     ModelState.Remove("Excerpt");
@@ -678,15 +688,6 @@ namespace RajaFath.Controllers
             {
                 model.Author = user.UserName;
             }
-
-            //var postCategory = await _context.postCategories.FirstOrDefaultAsync(c => c.PostId == post.Id);
-            //if (postCategory != null)
-            //{
-            //    model.SelectedCategoryIds = new List<int> { postCategory.CategoryId };
-            //}
-            
-
-            
             return model;
         }
         private Post MakeUpdateExistPostFromModel(PostCreateViewModel model,Post ExistPost)
@@ -700,6 +701,7 @@ namespace RajaFath.Controllers
                 post.Content = model.Content;
             if(model.FeatureImageId != ExistPost.FeaturedImageId)
                 post.FeaturedImageId = model.FeatureImageId;
+
             post.UpdatedDate = DateTime.Now;
 
             if (model.Excerpt != ExistPost.Excerpt)
