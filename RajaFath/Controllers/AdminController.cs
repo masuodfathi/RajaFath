@@ -538,30 +538,9 @@ namespace RajaFath.Controllers
             }
             else
             {
-                return NotFound();
+                var model = await CreateRawModelFromModel();
+                return View(model);
             }
-            
-                // Retrieve a list of categories and tags from your database
-                var categories = await _context.Categories.ToListAsync();
-                //var tags = await _context.Tags.ToListAsync();
-
-                // Get the current user (you can use HttpContext.User.Identity)
-                var currentUser = await _userManager.GetUserAsync(User);
-                var images = await _context.Images.ToListAsync();
-                
-                var Model = new PostCreateViewModel
-                {
-                    Categories = categories,
-                    //Tags = tags,
-                    CurrentUser = currentUser,
-                    AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList(),
-                    //AvailableTags = tags.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }).ToList(),
-                    Images = images,
-                };
-
-                return View(Model);
-            
-            
         }
 
         [HttpPost]
@@ -638,18 +617,16 @@ namespace RajaFath.Controllers
             }
         }
 
-        private async Task<PostCreateViewModel> CreateRawModelFromModel(PostCreateViewModel model)
+        private async Task<PostCreateViewModel> CreateRawModelFromModel(PostCreateViewModel? _model=null)
         {
+            var model = _model ?? new PostCreateViewModel();
             var currentUser = await _userManager.GetUserAsync(User);
             model.Author = currentUser.UserName;
             var categories = await _context.Categories.ToListAsync();
             model.AvailableCategories = categories.Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }).ToList();
             model.Images = await _context.Images.ToListAsync();
             model.FeatureImage = await _context.Images.FindAsync(model.FeatureImageId);
-            //if (model.SelectedCategoryIds == null)
-            //{
-            //    model.SelectedCategoryIds = new List<int> { 5 }; // Initialize the list with a single value
-            //}
+            
             return model;
         }
 
