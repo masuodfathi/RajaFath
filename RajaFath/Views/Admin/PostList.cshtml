@@ -24,26 +24,21 @@
                 <th>@Html.DisplayNameFor(model => model.Posts[0].Excerpt)</th>
                 <th>@Html.DisplayNameFor(model => model.Posts[0].AuthorName)</th>
                 <th>@Html.DisplayNameFor(model => model.Posts[0].UpdateDate)</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Posts)
             {
                 <tr>
-                    <td>@Html.DisplayFor(model => item.Title)</td>
+                    <td>@Html.DisplayFor(model => item.Title)
+                        <div>
+                            <a asp-action="CreatePost" asp-route-id="@item.Id">Edit</a>
+                            <a asp-action="DeletePost" asp-route-id="@item.Id">Delete</a>
+                        </div>
+                    </td>
                     <td>@Html.DisplayFor(model => item.Excerpt)</td>
                     <td>@Html.DisplayFor(model => item.AuthorName)</td>
                     <td>@Html.DisplayFor(model => item.UpdateDate)</td>
-                    
-                    
-                    
-                    
-                    <td>
-                        <a asp-action="CreatePost" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="DeletePost" asp-route-id="@item.Id">Delete</a>
-                    </td>
                 </tr>
             }
         </tbody>
