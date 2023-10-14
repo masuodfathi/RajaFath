@@ -5,7 +5,10 @@
 
 <div id="slider">
     <div class="container">
-        <partial name="_Carousel" model="Model.Carousel" />
+        @if (Model.Carousel != null)
+        {
+            <partial name="_Carousel" model="Model.Carousel" />
+        }
     </div>
 </div>
 @* company introduction ------------------------------------ *@
@@ -60,45 +63,15 @@
     <partial name="_homeprojects" model="Model.Projects" />
 
 }
+<!----------------------News------------------------->
+<partial name="_news" model="Model.News" />
 
 @* Activitis --------------------------------------------*@
 
-<div class="container border-top mt-4 pt-5">
-    <div class="p-4">
-        <h2>
-            زمینه های فعالیت
-        </h2>
-    </div>
-    <div class="row justify-content-center align-items-center">
-        <div class="col-md-4">
-            <div class="image-container">
-                <img src="~/images/p1.png" alt="Image with Text" class="img-fluid rounded-3">
-                <div class="overlay rounded-3"></div>
-                <div class="overlay-text">
-                    ساخت و ساز برج
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="image-container">
-                <img src="~/images/p1.png" alt="Image with Text" class="img-fluid rounded-3">
-                <div class="overlay rounded-3"></div>
-                <div class="overlay-text">
-                    ساخت و ساز برج
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="image-container">
-                <img src="~/images/p1.png" alt="Image with Text" class="img-fluid rounded-3">
-                <div class="overlay rounded-3"></div>
-                <div class="overlay-text">
-                    ساخت و ساز برج
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@if (Model.Activities != null)
+{
+    <partial name="_activities" model="Model.Activities" />
+}
 
 
 @* Contact Us ----------------------------------------*@

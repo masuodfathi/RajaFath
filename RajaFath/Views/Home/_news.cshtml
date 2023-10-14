@@ -1,0 +1,27 @@
+﻿@model List<RajaFath.Models.homePostViewModel>
+<style>
+    .line-divider { height: 2px; /* Adjust the height of the line as needed */ background: linear-gradient(to right, transparent 20%, #000, transparent 80%); }
+</style>
+<hr class="line-divider mt-5 mb-5" />
+<div class="container-fluid">
+    <h2 class="text-center">
+        آخرین اخبار
+    </h2>
+    <section class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var item in Model)
+        {
+            <article class="col">
+                <div class="card h-100">
+                    <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text">@item.Excerpt</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted"> @item.TimeDifference قبل</small>
+                    </div>
+                </div>
+            </article>
+        }
+    </section>
+</div>

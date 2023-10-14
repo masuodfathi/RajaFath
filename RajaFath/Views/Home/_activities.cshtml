@@ -1,0 +1,25 @@
+﻿@model List<RajaFath.Models.homePostViewModel>
+<div class="container border-top mt-4 pt-5">
+    <div class="p-4">
+        <h2>
+            زمینه های فعالیت
+        </h2>
+    </div>
+    <div class="row justify-content-center align-items-center">
+        @foreach (var item in Model)
+        {
+            
+            <a class="col-md-4" asp-action="">
+                <div class="image-container">
+                    <img src="@item.ImageUrl" alt="@item.Title" class="img-fluid rounded-3">
+                    <div class="overlay rounded-3"></div>
+                    <div class="overlay-text">
+                        @item.Title
+                    </div>
+                </div>
+            </a>
+            
+        }
+        
+    </div>
+</div>
