@@ -34,40 +34,115 @@ namespace RajaFath.Controllers
                 model.Carousel = slides;
             }
 
-            int? IdProject = _context.Categories.Where(c => c.Name.Equals("پروژه")).FirstOrDefault().CategoryId;
 
-            var postsInCategory = await _context.Posts
-            .Where(p => p.PostCategory.Any(pc => pc.CategoryId == IdProject))
-            .ToListAsync();
 
-            //if (IdProject != null)
+            var viewModel = new HomePageViewModel
+            {
+                Projects = await GetCategoryPostsAsync("پروژه"),
+                News = await GetCategoryPostsAsync("خبر"),
+                Activities = await GetCategoryPostsAsync("زمینه فعالیت"),
+                posts = await GetCategoryPostsAsync("مقاله"),
+                Carousel = slides
+            };
+
+
+
+            //int? IdProject = _context.Categories.Where(c => c.Name.Equals("پروژه")).FirstOrDefault().CategoryId;
+            
+            //var postsInCategory = await _context.Posts
+            //.Where(p => p.PostCategory.Any(pc => pc.CategoryId == IdProject))
+            //.ToListAsync();
+
+            //var postsWithImages = _context.Posts
+            //    .Where(post => post.PostCategory.Any(pc => pc.CategoryId == IdProject))
+            //    .OrderByDescending(p => p.CreatedDate)
+            //    .Take(3)
+            //    .Include(p => p.FeaturedImage) // Eager load the related image
+            //    .ToList();
+            //if (postsWithImages != null)
             //{
-
-            //    foreach (var p in postsInCategory)
-            //    {
-            //        var newPost = new homePostViewModel();
-            //        newPost.Id = p.Id;
-            //        newPost.Title = p.Title;
-            //        newPost.Excerpt = p.Excerpt;
-            //        newPost.Category = "پروژه";
-            //        newPost.Author = GetUserOfThePost(p.Id);
-            //        newPost.ImageUrl = GetImageOfThePost(p.FeaturedImageId);
-            //        model.Projects.Append(newPost);
-            //    }
-
+            //    //model.Projects = postsWithImages;
             //}
-            var postsWithImages = _context.Posts
-                .Where(post => post.PostCategory.Any(pc => pc.CategoryId == IdProject))
+            return View(viewModel);
+        }
+        private async Task<List<homePostViewModel>> GetCategoryPostsAsync(string categoryName)
+        {
+            var postList = await _context.Posts
+                .Where(p => p.PostCategory.Any(pc => pc.Category.Name == categoryName))
                 .OrderByDescending(p => p.CreatedDate)
                 .Take(3)
-                .Include(p => p.FeaturedImage) // Eager load the related image
-                .ToList();
-            if (postsWithImages != null)
+                .Include(p=>p.FeaturedImage)
+                .Include(p=>p.Author)
+                .ToListAsync();
+
+            return postList.Select(post => new homePostViewModel
             {
-                model.Projects = postsWithImages;
-            }
-            return View(model);
+                // Map properties from Post to homePostViewModel here
+                // For example:
+                Id = post.Id,
+                Title = post.Title,
+                Excerpt = post.Excerpt,
+                Author = post.Author?.UserName,
+                ImageUrl = post.FeaturedImage?.ImageUrl,
+                CreatedDate = CalculateTimeDifference(post.CreatedDate),
+                TimeDifference = GetFormattedTimeDifference(post.CreatedDate)
+
+
+
+            }).ToList();
         }
+
+        private DateTime? CalculateTimeDifference(DateTime? createdDate)
+        {
+            if (createdDate.HasValue)
+            {
+                DateTime now = DateTime.Now;
+                DateTime past = createdDate.Value;
+                DateTime result = now.AddTicks(-past.Ticks); // Subtract past from now
+                
+                string diff = GetFormattedTimeDifference(createdDate);
+                return result;
+            }
+            return null; // Return null if the createdDate is null
+        }
+        private string GetFormattedTimeDifference(DateTime? createdDate)
+        {
+            if (createdDate.HasValue)
+            {
+                TimeSpan timeDifference = (TimeSpan)(DateTime.Now - createdDate);
+
+                if (timeDifference.TotalSeconds < 60)
+                {
+                    return $"{(int)timeDifference.TotalSeconds} ثانیه";
+                }
+                else if (timeDifference.TotalMinutes < 60)
+                {
+                    return $"{(int)timeDifference.TotalMinutes} دقیقه";
+                }
+                else if (timeDifference.TotalHours < 24)
+                {
+                    return $"{(int)timeDifference.TotalHours} ساعت";
+                }
+                else if (timeDifference.TotalDays < 7)
+                {
+                    return $"{(int)timeDifference.TotalDays} روز";
+                }
+                else if (timeDifference.TotalDays < 30)
+                {
+                    return $"{(int)(timeDifference.TotalDays / 7)} هفته";
+                }
+                else if (timeDifference.TotalDays < 365)
+                {
+                    return $"{(int)(timeDifference.TotalDays / 30)} ماه";
+                }
+                else
+                {
+                    return $"{(int)(timeDifference.TotalDays / 365)} سال";
+                }
+            }
+            return string.Empty;
+        }
+
         private string GetImageOfThePost(int? Id)
         {
             if (Id == null)
