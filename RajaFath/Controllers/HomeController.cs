@@ -66,9 +66,6 @@ namespace RajaFath.Controllers
                 ImageUrl = post.FeaturedImage?.ImageUrl,
                 CreatedDate = CalculateTimeDifference(post.CreatedDate),
                 TimeDifference = GetFormattedTimeDifference(post.CreatedDate)
-
-
-
             }).ToList();
         }
 
