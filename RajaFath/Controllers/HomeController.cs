@@ -34,8 +34,6 @@ namespace RajaFath.Controllers
                 model.Carousel = slides;
             }
 
-
-
             var viewModel = new HomePageViewModel
             {
                 Projects = await GetCategoryPostsAsync("پروژه"),
