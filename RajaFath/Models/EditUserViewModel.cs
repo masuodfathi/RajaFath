@@ -22,6 +22,7 @@ namespace RajaFath.Models
         public string? SelectedRole { get; set; }
         public List<string>? AllRoles { get; set; }
         public IEnumerable<SelectListItem>? SelectListAllRoles { get; set; }
+        public int? PostNumber { get; set; }
         
     }
 }

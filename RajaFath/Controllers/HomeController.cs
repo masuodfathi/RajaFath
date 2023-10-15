@@ -45,24 +45,6 @@ namespace RajaFath.Controllers
                 Carousel = slides
             };
 
-
-
-            //int? IdProject = _context.Categories.Where(c => c.Name.Equals("پروژه")).FirstOrDefault().CategoryId;
-            
-            //var postsInCategory = await _context.Posts
-            //.Where(p => p.PostCategory.Any(pc => pc.CategoryId == IdProject))
-            //.ToListAsync();
-
-            //var postsWithImages = _context.Posts
-            //    .Where(post => post.PostCategory.Any(pc => pc.CategoryId == IdProject))
-            //    .OrderByDescending(p => p.CreatedDate)
-            //    .Take(3)
-            //    .Include(p => p.FeaturedImage) // Eager load the related image
-            //    .ToList();
-            //if (postsWithImages != null)
-            //{
-            //    //model.Projects = postsWithImages;
-            //}
             return View(viewModel);
         }
         private async Task<List<homePostViewModel>> GetCategoryPostsAsync(string categoryName)

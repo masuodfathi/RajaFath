@@ -1,17 +1,12 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using NuGet.Packaging.Signing;
 using RajaFath.Data;
 using RajaFath.Models;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Xml;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace RajaFath.Controllers
@@ -25,7 +20,6 @@ namespace RajaFath.Controllers
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ApplicationDbContext _context;
-        private readonly ApplicationDbContext _contextGet;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AdminController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, SignInManager<IdentityUser> signInManager,ApplicationDbContext contextGet)
@@ -37,8 +31,8 @@ namespace RajaFath.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
             _signInManager = signInManager;
-            _contextGet = contextGet;
         }
+        
         public IActionResult Index()
         {
             return View();
@@ -352,17 +346,20 @@ namespace RajaFath.Controllers
         {
             // Retrieve user information based on the provided ID and populate the model
             var user = await _userManager.FindByIdAsync(id);
-
             if (user == null)
             {
                 return NotFound();
             }
+            var postNumber = _context.Posts.Count(p => p.AuthorId.Equals(user.Id));
+
+            
 
             var model = new EditUserViewModel
             {
                 UserId = user.Id,
                 UserName = user.UserName,
-                Email = user.Email
+                Email = user.Email,
+                PostNumber = postNumber
             };
 
             return View(model);
