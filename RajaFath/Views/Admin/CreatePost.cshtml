@@ -28,7 +28,8 @@
         </div>
         <div class="form-group mb-5">
                 <label asp-for="Excerpt" class="form-label" class="form-control">خلاصه:</label>
-                <textarea asp-for="Excerpt" class="form-control" rows="3" id="excerpt"></textarea>
+                <textarea asp-for="Excerpt" class="form-control" rows="3" id="excerpt" maxlength="166"></textarea>
+                <span id="wordCount"></span>
                 <span asp-validation-for="Excerpt" class="text-danger"></span>
         </div>
     </div>
@@ -208,5 +209,5 @@
     <script src="~/js/tinyfa.js"></script>
     <script src="~/js/JavaScript.js"></script>
     <script src="~/js/DisableSubmitButton.js"></script>
-
+    <script src="~/js/countWords.js"></script>
 }
