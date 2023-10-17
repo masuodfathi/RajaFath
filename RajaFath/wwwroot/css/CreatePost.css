@@ -49,15 +49,6 @@ div#my-container {
     display: flex;
     flex-direction: column;
 }
-
-    #publish > label {
-        background: #ccced1;
-    }
-
-.featur-image-box > label {
-    background: #ccced1;
-}
-
 #feature-image {
     width: 100%;
     height: 180px;
@@ -103,10 +94,12 @@ div#my-container {
         background-color: #e74c3c;
     }
 
-label.category {
+.createpost-section-header { 
     position: relative;
     width: 100%;
-    background: #ccced1;
+    box-shadow: 0 2px 2px -2px rgba(34,47,62,.1), 0 8px 8px -4px rgba(34,47,62,.07);
+    font-weight: 600;
+
 }
 
 #Content {
@@ -148,4 +141,12 @@ label.category {
 
 .image-radio {
     display: none;
+}
+.excerpt-container{
+    position:relative;
+}
+.excerpt-container #excerpt{
+    resize:none;
+}
+#wordCount { position: absolute; bottom: 0; left: 0; padding-left: 12px; font-size: 14px; color: rgb(7 9 10 / 86%); width: 100%; text-align: left; border-top: 1px solid #e3e3e3; }
 }

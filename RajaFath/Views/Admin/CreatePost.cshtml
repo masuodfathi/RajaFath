@@ -26,16 +26,18 @@
                 <textarea id="Content" asp-for="Content" class="ckeditor" name="Content" readonly></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
         </div>
-        <div class="form-group mb-5">
+        <div class="form-group mb-5 excerpt-container">
                 <label asp-for="Excerpt" class="form-label" class="form-control">خلاصه:</label>
                 <textarea asp-for="Excerpt" class="form-control" rows="3" id="excerpt" maxlength="166"></textarea>
-                <span id="wordCount"></span>
+                <div id="wordCount">
+                    0 واژه‌ها
+                </div>
                 <span asp-validation-for="Excerpt" class="text-danger"></span>
         </div>
     </div>
     <div class="col-md-3">
         <div id="publish" class="border rounded">
-            <label class="rounded-top p-2">انتشار</label>
+            <label class="rounded-top p-2 createpost-section-header">انتشار</label>
             <div class="p-3 d-flex flex-column gap-2">
                     <label>
                         <span>
@@ -63,7 +65,7 @@
         </div>
             
             <div class="col mt-2 border rounded ">
-                <label class="category rounded-top p-2">دسته بندی</label>
+                <label class="createpost-section-header rounded-top p-2">دسته بندی</label>
                 <div class="form-group p-3">
                     
                     
@@ -79,7 +81,7 @@
         <div class="col">
             <div class="featur-image-box border rounded mt-2 d-flex flex-column">
             <!--Modal Button-->
-                <label class="rounded-top p-2">تصویر شاخص</label>
+                    <label class="rounded-top p-2 createpost-section-header">تصویر شاخص</label>
                     <img src="@(Model.FeatureImageId == null ? "/Images/default.png" : Model.FeatureImage?.ImageUrl)" alt="" id="feature-image" class="p-1" />
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
                     انتخاب تصویر شاخص
