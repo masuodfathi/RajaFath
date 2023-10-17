@@ -1,7 +1,7 @@
 ﻿@model RajaFath.Models.PostList
 @{
     ViewData["Title"] = "PostList";
-    Layout = "~/Views/Shared/_NavSideBar.cshtml";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
     int totalPages = (int)Math.Ceiling(Model.TotalPosts / (double)Model.PageSize);
 }
 
