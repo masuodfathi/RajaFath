@@ -524,10 +524,10 @@ namespace RajaFath.Controllers
                 {
                     await _context.SaveChangesAsync();
                 }
-                catch (Exception)
+                catch (DbUpdateConcurrencyException ex)
                 {
 
-                    throw;
+                    return BadRequest(ex.Message);
                 }
                 
             }
