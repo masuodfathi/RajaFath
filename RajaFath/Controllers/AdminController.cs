@@ -520,7 +520,16 @@ namespace RajaFath.Controllers
             if (post != null)
             {
                 _context.Posts.Remove(post);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                
             }
             return RedirectToAction("PostList");
         }
