@@ -691,11 +691,11 @@ namespace RajaFath.Controllers
                 if (model.Excerpt == null)
                 {
                     if(model.Content != null)
-                    post.Excerpt = GetLimitedWordsFromHtml(model.Content, 15);
+                    post.Excerpt = GetLimitedWordsFromHtml(model.Content);
                 }
                 else
                 {
-                    post.Excerpt = GetLimitedWordsFromHtml(model.Excerpt, 15);
+                    post.Excerpt = GetLimitedWordsFromHtml(model.Excerpt);
                 }
                     
 
@@ -718,12 +718,12 @@ namespace RajaFath.Controllers
             {
                 if (model.Content != null)
                 {
-                    post.Excerpt = GetLimitedWordsFromHtml(model.Content, 15);
+                    post.Excerpt = GetLimitedWordsFromHtml(model.Content);
                 }
             }
             else
             {
-                post.Excerpt = GetLimitedWordsFromHtml(model.Excerpt, 15);
+                post.Excerpt = GetLimitedWordsFromHtml(model.Excerpt);
             }
 
             return post;
@@ -883,8 +883,10 @@ namespace RajaFath.Controllers
             }
         }
         
-        private string GetLimitedWordsFromHtml(string html, int wordLimit)
+        private string GetLimitedWordsFromHtml(string html)
         {
+            // Set the charackter limit
+            int wordLimit = 35;
             if (string.IsNullOrEmpty(html) || wordLimit <= 0)
                 return string.Empty;
 
