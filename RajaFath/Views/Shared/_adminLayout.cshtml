@@ -1,4 +1,5 @@
 ﻿<!-- _AdminLayout.cshtml -->
+
 <!DOCTYPE html>
 <html lang="fr" dir="rtl">
 <head>
@@ -9,54 +10,70 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="~/css/sidebar.css" asp-append-version="true" rel="stylesheet" />
+    <style>
+
+        .nav { padding-right: 0; }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row min-vh-100">
+        <div class="row flex-nowrap">
             <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar text-light py-4">
-                <div>
-                    <a href="/" class="btn fw-lighter text-light px-0">
-                        <i class="bi bi-arrow-bar-right"></i>
-                        بازگشت به سایت
-                        </a>
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <div class="sidebar-header m-0 text-light">
+                        <h3 class="mb-4">پنل مدیریت</h3>
+                    </div>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="/Admin/Index" class="nav-link align-middle px-0 text-light">
+                                <i class="fs-4 bi bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">داشبورد</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Admin/ListRoles" class="nav-link px-0 align-middle text-light">
+                                <i class="fs-4 bi bi-key"></i> <span class="ms-1 d-none d-sm-inline">مدیریت نقش ها</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Admin/ListUsers" class="nav-link px-0 align-middle text-light">
+                                <i class="fs-4 bi bi-person-gear"></i> <span class="ms-1 d-none d-sm-inline">مدیریت کاربران</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Admin/PostList" class="nav-link px-0 align-middle text-light">
+                                <i class="fs-4 bi bi-pin-angle"></i> <span class="ms-1 d-none d-sm-inline">نوشته ها</span>
+                            </a>
+                            <ul class="collapse show nav flex-column me-3" id="submenu1" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="/Admin/PostList" class="nav-link px-0 text-light"><i class="fs-4 bi bi-files"></i><span class="d-none d-sm-inline">همه نوشته ها</span></a>
+                                </li>
+                                <li>
+                                    <a href="/Admin/CreatePost" class="nav-link px-0 text-light"><i class="bi bi-file-plus" style="font-size:1.4rem"></i><span class="d-none d-sm-inline">افزودن نوشته</span></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
                 </div>
-                
-                <div class="sidebar-header mt-4">
-                    <h3>پنل مدیریت</h3>
-                </div>
-                
-                <ul class="list-unstyled components py-4 m-0 px-0">
-                    <li class="py-2 ">
-                        <a href="/Admin/Index" class="text-decoration-none text-light">داشبورد</a>
-                    </li>
-                    <li class="py-2">
-                        <a href="/Admin/ListRoles" class="text-decoration-none text-light">مدیریت نقشها</a>
-                    </li>
-                    <li class="py-2">
-                        <a href="/Admin/ListUsers" class="text-decoration-none text-light">مدیریت کاربران</a>
-                    </li>
-                    <li class="py-2">
-                        <a href="/Admin/PostList" class="text-decoration-none text-light">نوشته ها</a>
-                        <ul class="list-unstyled components py-1 mx-3 px-0">
-                            <li class="py-2">
-                                <a href="/Admin/PostList" class="text-decoration-none text-light">همه نوشته ها</a>
-                            </li>
-                            <li class="py-2">
-                                <a href="/Admin/CreatePost" class="text-decoration-none text-light">افزودن نوشته</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- Add more menu items as needed -->
-                </ul>
-            </nav>
+            </div>
 
             <!-- Page Content -->
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    
-                    <div class="container-fluid">
-                        <p>@ViewBag.username</p>
+
+            <main role="main" class="col p-0 ">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light bg-dark">
+
+                    <div class="container-fluid col-6 px-0">
+                        <div>
+                            <a href="/" class="btn fw-lighter text-light px-0">
+                                <i class="bi bi-arrow-bar-right"></i>
+                                بازگشت به سایت
+                            </a>
+                        </div>
+                    </div>
+                    <div class="container-fluid text-light justify-content-end col-6 p-2">
+                        <partial name="_LogedInUserName" class="p-0"/>
                     </div>
                 </nav>
 
@@ -75,7 +92,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
