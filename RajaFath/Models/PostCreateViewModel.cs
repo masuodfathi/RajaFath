@@ -37,5 +37,6 @@ namespace RajaFath.Models
         public int? FeatureImageId { get; set; }
         public Image? FeatureImage { get; set; }
         public List<Image>? Images { get; set; }
+        public string? PostType {  get; set; }
     }
 }
