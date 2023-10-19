@@ -447,13 +447,15 @@ namespace RajaFath.Controllers
 
 
         ////////////////post/////////////////////
-        public async Task<IActionResult> PostList(int? page)
+        public async Task<IActionResult> PostList(int? page, string postType)
         {
+            ViewBag.slug = postType;
             int pageSize = 10;
             int pageNumber = page ?? 1; // Get the current page number from the request, default to 1 if not provided
-
+            
             
             var posts = await _context.Posts
+                .Where(p=>p.PostType == postType)
                 .Include(p => p.Author) // Load related User data
                 .OrderByDescending(p => p.UpdatedDate)
                 .Skip((pageNumber - 1) * pageSize)
@@ -466,6 +468,7 @@ namespace RajaFath.Controllers
                 Excerpt = p.Excerpt,
                 AuthorName = p.Author?.UserName, // Access the related user's username
                 UpdateDate = p.UpdatedDate,
+                PostType = p.PostType
             }).ToList();
 
             var model = new PostList
@@ -495,6 +498,7 @@ namespace RajaFath.Controllers
                     PostId = post.Id,
                     Title = post.Title,
                     Excerpt = post.Excerpt,
+                    PostType = post.PostType
 
                 };
                 return View(model);
@@ -529,13 +533,15 @@ namespace RajaFath.Controllers
 
                     return BadRequest(ex.Message);
                 }
-                
+                return RedirectToAction("PostList", new { postType = post?.PostType });
             }
-            return RedirectToAction("PostList");
+            return RedirectToAction("Index");
         }
         [HttpGet]
-        public async Task<IActionResult> CreatePost(int? Id)
+        public async Task<IActionResult> CreatePost(int? Id,string? postType)
         {
+            ViewBag.PostType = postType;
+            
             var post = await _context.Posts.FindAsync(Id);
             if (post != null)
             {
@@ -545,6 +551,7 @@ namespace RajaFath.Controllers
             else
             {
                 var model = await CreateRawModelFromModel();
+                model.PostType = postType;
                 return View(model);
             }
         }
@@ -577,7 +584,7 @@ namespace RajaFath.Controllers
                     }
                     // update model with saved post
 
-                    return RedirectToAction("PostList");
+                    return RedirectToAction("PostList", new { postType = model.PostType });
                 }
                 model = await CreateRawModelFromModel(model);
                 return View(model);
@@ -633,6 +640,7 @@ namespace RajaFath.Controllers
             model.Images = await _context.Images.ToListAsync();
             model.FeatureImage = await _context.Images.FindAsync(model.FeatureImageId);
             
+            
             return model;
         }
 
@@ -643,6 +651,7 @@ namespace RajaFath.Controllers
 
             model.Title = post.Title;
             model.Content = post.Content;
+
             
             var postCategory = await _context.postCategories.FirstOrDefaultAsync(c => c.PostId == post.Id);
 
@@ -665,7 +674,7 @@ namespace RajaFath.Controllers
             model.PostId = post.Id;
             model.FeatureImage = post?.FeaturedImage;
             model.FeatureImageId =post?.FeaturedImageId;
-            
+            model.PostType = post?.PostType;
             //model.SelectedCategoryIds.Add(postCategory.CategoryId);
             var user = await _userManager.FindByIdAsync(post.AuthorId);
             if (user != null)
@@ -687,7 +696,7 @@ namespace RajaFath.Controllers
                 post.FeaturedImageId = model.FeatureImageId;
 
             post.UpdatedDate = DateTime.Now;
-            post.PostType = "post";
+            post.PostType = model.PostType;
 
             if (model.Excerpt != ExistPost.Excerpt)
                 if (model.Excerpt == null)
@@ -715,7 +724,7 @@ namespace RajaFath.Controllers
                 UpdatedDate = DateTime.Now,
                 AuthorId = AuthorId,
                 FeaturedImage = model.FeatureImage,
-                PostType = "post"
+                PostType = model.PostType
             };
             if (model.Excerpt == null)
             {
@@ -903,12 +912,26 @@ namespace RajaFath.Controllers
 
             // Concatenate the plain text and split it into words
             var plainText = string.Join(" ", textNodes);
+
+            // Remove unwanted Unicode characters
+            plainText = RemoveUnwantedUnicodeCharacters(plainText);
+
             var words = plainText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Take the first 'wordLimit' words
             var limitedWords = string.Join(" ", words.Take(wordLimit));
 
             return limitedWords;
+        }
+        private string RemoveUnwantedUnicodeCharacters(string input)
+        {
+            // Define a regular expression to match unwanted Unicode characters
+            string pattern = "[\u200E-\u200F\u202A-\u202E\u202B\u200F&rlm;]"; // RLM, LRM, and other marks
+
+            // Replace unwanted Unicode characters with an empty string
+            string cleanedInput = Regex.Replace(input, pattern, string.Empty);
+
+            return cleanedInput;
         }
         private string RemoveHtmlTags(string text)
         {
