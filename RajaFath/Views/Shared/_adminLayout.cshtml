@@ -25,11 +25,24 @@
                     <div class="sidebar-header m-0 text-light">
                         <h3 class="mb-4">پنل مدیریت</h3>
                     </div>
-                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start " id="menu">
                         <li class="nav-item">
                             <a href="/Admin/Index" class="nav-link align-middle px-0 text-light">
                                 <i class="fs-4 bi bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">داشبورد</span>
                             </a>
+                        </li>
+                        <li>
+                            <a asp-route-postType="page" asp-controller="Admin" asp-action="PostList" class="nav-link px-0 align-middle text-light">
+                                <i class="fs-4 bi bi-file-earmark-break"></i> <span class="ms-1 d-none d-sm-inline">برگه ها</span>
+                            </a>
+                            <ul class="collapse show nav flex-column me-3 adminpanel-nestedul" id="submenu1" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a asp-route-postType="page" asp-controller="Admin" asp-action="PostList" class="nav-link px-0 text-light"><i class="bi-file-earmark-medical"></i><span class="d-none d-sm-inline">همه برگه ها</span></a>
+                                </li>
+                                <li>
+                                    <a asp-route-postType="page" asp-controller="Admin" asp-action="CreatePost" class="nav-link px-0 text-light"><i class="bi bi-file-earmark-plus"></i><span class="d-none d-sm-inline">افزودن برگه</span></a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <a href="/Admin/ListRoles" class="nav-link px-0 align-middle text-light">
@@ -42,18 +55,19 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/Admin/PostList" class="nav-link px-0 align-middle text-light">
+                            <a asp-route-postType="post" asp-controller="Admin" asp-action="PostList" class="nav-link px-0 align-middle text-light">
                                 <i class="fs-4 bi bi-pin-angle"></i> <span class="ms-1 d-none d-sm-inline">نوشته ها</span>
                             </a>
                             <ul class="collapse show nav flex-column me-3" id="submenu1" data-bs-parent="#menu">
                                 <li class="w-100">
-                                    <a href="/Admin/PostList" class="nav-link px-0 text-light"><i class="fs-4 bi bi-files"></i><span class="d-none d-sm-inline">همه نوشته ها</span></a>
+                                    <a asp-route-postType="post" asp-controller="Admin" asp-action="PostList" class="nav-link px-0 text-light"><i class="fs-4 bi bi-files"></i><span class="d-none d-sm-inline">همه نوشته ها</span></a>
                                 </li>
                                 <li>
-                                    <a href="/Admin/CreatePost" class="nav-link px-0 text-light"><i class="bi bi-file-plus" style="font-size:1.4rem"></i><span class="d-none d-sm-inline">افزودن نوشته</span></a>
+                                    <a asp-route-postType="post" asp-controller="Admin" asp-action="CreatePost" class="nav-link px-0 text-light"><i class="bi bi-file-plus" style="font-size:1.5rem"></i><span class="d-none d-sm-inline">افزودن نوشته</span></a>
                                 </li>
                             </ul>
                         </li>
+                        
                     </ul>
 
                 </div>

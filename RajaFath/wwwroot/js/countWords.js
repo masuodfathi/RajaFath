@@ -2,7 +2,7 @@
 const wordCountDisplay = document.getElementById('wordCount');
 const wordLimit = 35; // Change this to your desired word limit
 
-textArea.addEventListener('keydown', function () {
+const handleTextareaKeydown = () => {
     const text = textArea.value;
     const words = text.split(/\s+/);
     const wordCount = words.length;
@@ -14,4 +14,7 @@ textArea.addEventListener('keydown', function () {
     }
 
     wordCountDisplay.textContent = wordCount + " واژه‌ها";
-});
+};
+
+textArea.addEventListener('keydown', handleTextareaKeydown);
+document.addEventListener("DOMContentLoaded", handleTextareaKeydown);

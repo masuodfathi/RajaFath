@@ -63,9 +63,25 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "page",
+        pattern: "page/{slug}",
+        defaults: new { controller = "page", action = "Show" },
+        constraints: new { slug = new SlugifyParameterTransformer() }
+    );
+    endpoints.MapControllerRoute(
+        name: "PostList",
+        pattern: "Admin/PostList",
+        defaults: new { controller = "Admin", action = "PostList" }
+        );
+});
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();

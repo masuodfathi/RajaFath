@@ -1,4 +1,5 @@
-﻿
-@media only screen and (max-width: 576px) {
-    #submenu1 { margin-right: 0 !important }
+﻿.adminpanel-nestedul a{
+    text-align:center;
+}
+@media only screen and (max-width: 576px) { #submenu1 { margin-right: 0 !important }
 }
