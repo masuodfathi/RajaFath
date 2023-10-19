@@ -643,6 +643,7 @@ namespace RajaFath.Controllers
 
             model.Title = post.Title;
             model.Content = post.Content;
+            
             var postCategory = await _context.postCategories.FirstOrDefaultAsync(c => c.PostId == post.Id);
 
             
@@ -686,6 +687,7 @@ namespace RajaFath.Controllers
                 post.FeaturedImageId = model.FeatureImageId;
 
             post.UpdatedDate = DateTime.Now;
+            post.PostType = "post";
 
             if (model.Excerpt != ExistPost.Excerpt)
                 if (model.Excerpt == null)
@@ -713,6 +715,7 @@ namespace RajaFath.Controllers
                 UpdatedDate = DateTime.Now,
                 AuthorId = AuthorId,
                 FeaturedImage = model.FeatureImage,
+                PostType = "post"
             };
             if (model.Excerpt == null)
             {
