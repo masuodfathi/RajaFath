@@ -13,6 +13,7 @@ namespace RajaFath.Models
         public string? AuthorName { get; set; }
         [Display(Name = "آخرین به‌روز رسانی")]
         public DateTime? UpdateDate { get; set; }
+        public string? PostType {  get; set; }
 
     }
 }
