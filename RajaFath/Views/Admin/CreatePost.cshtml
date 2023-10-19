@@ -4,7 +4,30 @@
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <link rel="stylesheet" href="~/css/CreatePost.css" asp-append-version="true" />
-<h2>نوشته جدید</h2>
+@if (Model.PostType == "page")
+{
+    if (Model.PostId.HasValue)
+    {
+        <h2>ویرایش برگه</h2>
+    }
+    else
+    {
+        <h2>برگه جدید</h2>
+    }
+    
+}
+else
+{
+    if (Model.PostId.HasValue)
+    {
+        <h2>ویرایش نوشته</h2>
+    }
+    else
+    {
+        <h2>نوشته جدید</h2>
+    }
+}
+
 
 <form asp-action="CreatePost" method="post" enctype="multipart/form-data" id="createpost-form">
     
@@ -12,7 +35,7 @@
     {
         <input asp-for="PostId" name="PostId" type="hidden" value="@Model.PostId" />
     }
-
+    <input type="hidden" name="postType" value="@Model.PostType">
     <div class="row pt-3">
     <div class="col-md-9">
         <div class="form-group mb-5">
