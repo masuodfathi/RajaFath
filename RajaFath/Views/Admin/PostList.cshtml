@@ -5,16 +5,26 @@
     int totalPages = (int)Math.Ceiling(Model.TotalPosts / (double)Model.PageSize);
 }
 
-
-
-<h1>
-    لیست نوشته‌ها
-</h1>
-
 <p>
-    <a asp-action="CreatePost">
-        ایجاد نوشته
-    </a>
+    @if (ViewBag.slug?.ToString() == "page")
+    {
+        <h1>
+            برگه ها
+        </h1>
+        <a asp-action="CreatePost" asp-route-postType="page">
+            برگه جدید
+        </a>
+    }
+    else
+    {
+        <h1>
+           نوشته‌ها
+        </h1>
+        <a asp-action="CreatePost" asp-route-postType="post">
+            ایجاد نوشته
+        </a>
+    }
+    
 </p>
 <div class="table-container table-responsive">
     <table class="table table-striped">
@@ -32,8 +42,8 @@
                 <tr>
                     <td>@Html.DisplayFor(model => item.Title)
                         <div>
-                            <a asp-action="CreatePost" asp-route-id="@item.Id">Edit</a>
-                            <a asp-action="DeletePost" asp-route-id="@item.Id">Delete</a>
+                            <a asp-action="CreatePost" asp-route-id="@item.Id" asp-route-postType="@item.PostType">Edit</a>
+                            <a asp-action="DeletePost" asp-route-id="@item.Id" asp-route-postType="@item.PostType">Delete</a>
                         </div>
                     </td>
                     <td>@Html.DisplayFor(model => item.Excerpt)</td>
