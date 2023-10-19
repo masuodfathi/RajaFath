@@ -434,6 +434,9 @@ namespace RajaFath.Migrations
                     b.Property<string>("OgTitle")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PostType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<TimeSpan?>("ReadingTime")
                         .HasColumnType("time");
 
