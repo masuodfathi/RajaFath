@@ -48,12 +48,13 @@ namespace RajaFath.Controllers
         private async Task<List<homePostViewModel>> GetCategoryPostsAsync(string categoryName)
         {
             var postList = await _context.Posts
-                .Where(p => p.PostCategory.Any(pc => pc.Category.Name == categoryName))
+                .Where(p => p.PostCategory.Any(pc => pc.Category.Name == categoryName) && p.PostType == "post")
                 .OrderByDescending(p => p.CreatedDate)
                 .Take(3)
                 .Include(p=>p.FeaturedImage)
                 .Include(p=>p.Author)
                 .ToListAsync();
+            
 
             return postList.Select(post => new homePostViewModel
             {
