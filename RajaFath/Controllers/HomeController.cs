@@ -24,9 +24,9 @@ namespace RajaFath.Controllers
             var model = new HomePageViewModel();
             var slides = new List<Carousel>()
             {
-                new Carousel{CarouselId= 1, Title="sile1",Description="the first description",Path="images\\slide1.jpg"},
-                new Carousel{CarouselId= 2, Title="carosel1",Description="the first description",Path="images\\slide2.jpg"},
-                new Carousel{CarouselId= 3, Title="carosel1",Description="the first description",Path="images\\slide3.jpg"},
+                new Carousel{CarouselId= 1, Title="پروژه تجاری دریاچه",Description="بهترین و نزدیکترین پروژه تجاری در رینگ اول دریاچه",Path="images\\slide1.jpg",PostId=1131},
+                new Carousel{CarouselId= 2, Title="پروژه آرتمیس",Description="مناسب ترین پروژه مسکونی برای سرمایه گذاری در منطقه 22",Path="images\\slider2.jpg",PostId=1133},
+                new Carousel{CarouselId= 3, Title="پروژه الماس",Description="the first description",Path="images\\slider3.jpg",PostId=1166},
             };
 
             if (slides.Count > 0)
@@ -153,6 +153,23 @@ namespace RajaFath.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        
+        public async Task<IActionResult> Managers()
+        {
+            var managers = await _context.Posts
+                .Where(p => p.PostCategory.Any(p => p.Category.Name == "اعضا") && p.PostType == "page")
+                .OrderBy(p => p.CreatedDate)
+                .Include(p => p.FeaturedImage)
+                .ToListAsync();
+            var model = managers.Select(m => new Managers
+            {
+                Id = m.Id,
+                Title = m.Title,
+                Content = m.Content,
+                Excerpt = m.Excerpt,
+                Image = m.FeaturedImage
+            }).ToList();
+            return View(model);
+        }
+
     }
 }

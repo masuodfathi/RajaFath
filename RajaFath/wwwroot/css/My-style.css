@@ -52,6 +52,7 @@
     font-size: 24px; /* Adjust font size as needed */
     font-weight: bold; /* Font weight for emphasis */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a shadow for readability */
+    width:max-content;
 }
 
 .overlay {

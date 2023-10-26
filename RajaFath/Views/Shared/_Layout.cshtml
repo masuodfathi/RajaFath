@@ -9,7 +9,16 @@
     <link rel="stylesheet" href="~/css/My-style.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RajaFath.styles.css" asp-append-version="true" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css" rel="stylesheet">
-
+    <style>
+        .my-menu>li:hover{ 
+            border-bottom: 2px solid #eaab7f;
+            color: #ed5216;
+        }
+        .my-menu > li:hover a{ color: #eaab7f !important; }
+        .my-menu > li{
+            border-bottom:2px solid #fff;
+        }
+        </style>
 </head>
 <body>
     <header>
@@ -23,16 +32,22 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between my-3">
+                    <ul class="navbar-nav flex-grow-1 gap-2 my-menu">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">زمینه های فعالیت</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Category" asp-route-Category="زمینه فعالیت">زمینه های فعالیت</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">پروژه ها</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Category" asp-route-Category="پروژه">پروژه ها</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Category" asp-route-Category="خبر">اخبار</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Managers">مدیران</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="page" asp-action="show" asp-route-slug="درباره ما">درباره ما</a>
@@ -55,7 +70,11 @@
     <footer class="border-top footer text-muted bg-dark text-light mt-5">
         <div class="container text-light">
             <partial name="_footer"/>
-            &copy; 2023 - RajaFath - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-light text-decoration-none">Privacy</a>
+            <hr />
+            <div class="text-center">
+                &copy; 2023 - RajaFath - Privacy
+            </div>
+            
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

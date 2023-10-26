@@ -1,0 +1,102 @@
+﻿<div class="modal fade" id="EditorImage">
+    <div class="modal-dialog modal-fullscreen p-4">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+
+                <h5 class="modal-title">انتخاب تصویر</h5>
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+
+            <!-- Modal Body with Tabs -->
+            <div class="modal-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="tab1-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">انتخاب از کتابخانه تصاویر</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">بارگذاری تصویر جدید</a>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content pt-4" id="tab">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                        <!-- Content for Tab 1 with scrollable container -->
+                        <div class="container overflow-auto m-0" id="my-container">
+                            <div class="row">
+                                <div class="col-md-9 col-" id="gallery-wrapper">
+                                    <div class="image-grid">
+                                        <!-- Add images here dynamically with radio buttons -->
+                                        @if (Model.Images != null)
+                                            @foreach (var img in Model.Images)
+                                            {
+                                                <label class="editor-image-tile" data-image-id="@img.Id">
+                                                    <input type="radio" name="selected-image" class="editor-image-radio" id="-editor-image-radio-@img.Id" value="@img.Id">
+                                                    <img src="@img.ImageUrl" alt="@img.AltText? @img.AltText: '1' " class="modal-image">
+                                                </label>
+                                            }
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3 d-none d-sm-block" id="modal-sidebar">
+                                    <p>Display image ditails</p>
+                                    <form id="image-details-form">
+                                        <div class="mb-3">
+                                            <label for="image-title" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="image-title" name="imageTitle">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="image-description" class="form-label">Description</label>
+                                            <textarea class="form-control" id="image-description" name="imageDescription"></textarea>
+                                        </div>
+                                        <!-- Add more fields for image details as needed -->
+                                        <!-- Save button to save changes -->
+                                        <button type="button" id="save-image-details" class="btn btn-success">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+                        <!-- Content for Tab 2 with scrollable container -->
+                        <div class="container overflow-auto">
+                            <div class="row">
+                                <div class="col">
+
+                                    <!-- Form for uploading image in second tab-->
+                                    <form id="editor-image-upload-form" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label for="image-title" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="image-title" name="imageTitle">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="image-description" class="form-label">Description</label>
+                                            <textarea class="form-control" id="image-description" name="imageDescription"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="image-file" class="form-label">Select Image:</label>
+                                            <input type="file" class="form-control" id="image-file" name="imageFile">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="editor-modal-cancel">انصراف</button>
+                <button type="button" class="btn btn-primary" id="editor-modal-approve" data-bs-dismiss="modal">قرار دادن تصویر</button>
+            </div>
+        </div>
+    </div>
+</div>

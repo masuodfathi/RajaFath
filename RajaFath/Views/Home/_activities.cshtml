@@ -1,15 +1,15 @@
 ﻿@model List<RajaFath.Models.homePostViewModel>
-<div class="container border-top mt-4 pt-5">
+<div class="container-fluid border-top mt-4 pt-5">
     <div class="p-4">
         <h2>
             زمینه های فعالیت
         </h2>
     </div>
-    <div class="row justify-content-center align-items-center">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (var item in Model)
         {
-            
-            <a class="col-md-4" asp-action="">
+            <div class="col">
+            <a asp-action="show" asp-controller="post" asp-route-id="@item.Id" class="text-decoration-none text-dark">
                 <div class="image-container">
                     <img src="@item.ImageUrl" alt="@item.Title" class="img-fluid rounded-3">
                     <div class="overlay rounded-3"></div>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
             </a>
-            
+            </div>
         }
         
     </div>

@@ -76,12 +76,19 @@ app.UseEndpoints(endpoints =>
         pattern: "Admin/PostList",
         defaults: new { controller = "Admin", action = "PostList" }
         );
+    endpoints.MapControllerRoute(
+        name: "Category",
+        pattern: "category/{category}",
+        defaults: new { controller = "Category", action= "Category" }
+        );
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}"
+        );
 });
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.UseStatusCodePagesWithReExecute("/Home/NotFound", "?code={0}");
 app.MapRazorPages();
 
 app.Run();

@@ -1,0 +1,30 @@
+﻿@model RajaFath.Models.PageViewModel
+@{
+    ViewData["Title"] = "Show";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .singlepage-featur-image{
+        max-height:400px;
+        object-fit:cover;
+    }
+    .singlepage-content{
+        text-align:justify;
+        line-height:2.1rem;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row fw-bolder text-center py-5">
+        <h1 class="my-4 fw-bolder">@Model.Title</h1>
+    </div>
+    <div class="pb-3">
+        <img src="@Model.FeaturImage?.ImageUrl" alt="@Model.Title" class="img-fluid rounded-2 w-100 object-fit-contain singlepage-featur-image" />
+    </div>
+    <div class="singlepage-content pt-3 mt-3">@Html.Raw(Model.Content)</div>
+    <hr class="hr"/>
+    <p><span>تاریخ آخرین ویرایش:</span>@Model.UpdateDate</p>
+    <p><span>نویسنده: </span>@Model.Author?.UserName</p>
+</div>
+
+
+

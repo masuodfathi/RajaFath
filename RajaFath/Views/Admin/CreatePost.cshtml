@@ -106,13 +106,13 @@ else
             <!--Modal Button-->
                     <label class="rounded-top p-2 createpost-section-header">تصویر شاخص</label>
                     <img src="@(Model.FeatureImageId == null ? "/Images/default.png" : Model.FeatureImage?.ImageUrl)" alt="" id="feature-image" class="p-1" />
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" id="btn-featureimage">
                     انتخاب تصویر شاخص
                 </button>
                 
-                <div class="form-group mb-5 d-none">
-                    
-                    <input type="hidden" asp-for="FeatureImageId" id="selected-image-id" name="FeatureImageId" />
+                <div class="form-group d-none">
+                    <label asp-for="FeatureImageId">FeatureImageID</label>
+                    <input asp-for="FeatureImageId" id="selected-image-id" name="FeatureImageId"/>
                     <span asp-validation-for="FeatureImageId" class="text-danger"></span>
                 </div>
             </div>
@@ -120,7 +120,7 @@ else
     </div>
     </div>
 </form>
-<!-- Bootstrap 5 Modal -->
+<!-- FeaturImage Modal -->
 <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-fullscreen p-4">
         <div class="modal-content">
@@ -218,7 +218,12 @@ else
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal-cancel">انصراف</button>
-                <button type="button" class="btn btn-primary" id="approve" data-bs-dismiss="modal">قرار دادن به عنوان تصویر شاخص</button>
+                <button type="button" class="btn btn-primary" id="modal-approve" data-bs-dismiss="modal">قرار دادن تصویر</button>
+                <div class="d-none">
+                    <input id="image-src" type="text"/>
+                    <input id="image-id" type="number" />
+                    <input id="which-target" type="text"/>
+                </div>
             </div>
         </div>
     </div>

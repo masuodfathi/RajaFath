@@ -1,5 +1,10 @@
 ﻿@model List<RajaFath.Models.Carousel>
-
+<style>
+    .text-shadow{
+        text-shadow:0 0 7px #000;
+    }
+    .carousel-caption { background: radial-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0)); }
+</style>
 <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
         @for (int i = 0; i < Model.Count(); i++)
@@ -8,15 +13,21 @@
         }
     </div>
     <div class="carousel-inner">
-        @for (int i = 0; i < Model.Count; i++)
+        @{int activcounter = 0;}
+        @foreach (var item in Model)
         {
-            <div class="carousel-item @(i == 0 ? "active" : "")">
-                <img src="@Model[i].Path" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>@Model[i].Title</h5>
-                    <p>@Model[i].Description</p>
-                </div>
+            
+            
+            <div class="carousel-item @(activcounter == 0 ? "active" : "")">
+                <a asp-controller="post" asp-action="show" asp-route-id="@item.PostId">
+                    <img src="@item.Path" class="d-block w-100" alt="@item.Title">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h2 class=" text-shadow fs-1">@item.Title</h2>
+                        <p class="fw-normal text-shadow fs-3">@item.Description</p>
+                    </div>
+                </a>
             </div>
+            activcounter++;
         }
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">

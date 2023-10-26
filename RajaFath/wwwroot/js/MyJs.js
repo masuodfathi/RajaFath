@@ -1,11 +1,16 @@
 ﻿
     // JavaScript to handle image selection
 document.addEventListener("DOMContentLoaded", function () {
-    
-    
+
+    var featurimageSelectionBtn = document.getElementById("btn-featureimage");
+    var whichTarget = document.getElementById("which-target");
+    featurimageSelectionBtn.addEventListener("click", () => {
+        whichTarget.value = "featureImg";
+    })
     handleImageSelection();
     handleUploadImage();
     handleModalButton();
+    
 });
 
 var handleModalButton = () => {
@@ -13,7 +18,27 @@ var handleModalButton = () => {
     var approveButton = document.getElementById("modal-approve");
     cancelButton.addEventListener("click", () => {
         const selectedImageIdInput = document.getElementById("selected-image-id");
+
         selectedImageIdInput.value = "";
+    });
+    approveButton.addEventListener("click", () => {
+        var whichTarget = document.getElementById("which-target");
+        const featureimage = document.getElementById("feature-image");
+        const selectedImageIdInput = document.getElementById("selected-image-id");
+        const idholder = document.getElementById("image-id");
+        const srcholder = document.getElementById("image-src");
+        if (whichTarget.value == "featureImg") {
+            featureimage.src = srcholder.value;
+            selectedImageIdInput.value = idholder.value;
+        }
+        if (whichTarget.value == "Tiny") {
+            var editor = tinymce.get('Content');
+            if (editor) {
+                var imgUrl = srcholder.value.replace(/^https?:\/\/[^/]+/, '');
+                editor.insertContent('<img src="' + imgUrl + '" alt="Image" width="400" />');
+            }
+        }
+        whichTarget.value = "";
     });
 }
 
@@ -101,7 +126,8 @@ const handleImageSelection = () => {
 
     imageTiles.forEach((tile, index) => {
         const imageElement = tile.querySelector("img");
-        const featureimage = document.getElementById("feature-image");
+        
+        const srcholder = document.getElementById("image-src");
         imageElement.addEventListener("click", (event) => {
 
             event.stopPropagation();
@@ -122,13 +148,15 @@ const handleImageSelection = () => {
             // Select the clicked image
             tile.classList.add("selected");
             var clickedImageSrc = imageElement.src;
-            
-            featureimage.src = clickedImageSrc;
+            srcholder.value = clickedImageSrc;
+            //featureimage.src = clickedImageSrc;
         });
     });
 }
 var setSelectedInput = (tile) => {
-    const selectedImageIdInput = document.getElementById("selected-image-id");
-    const selectedImageId = tile.getAttribute("data-image-id");
-    selectedImageIdInput.value = selectedImageId;
+    //const selectedImageIdInput = document.getElementById("selected-image-id");
+    //const selectedImageId = tile.getAttribute("data-image-id");
+    //selectedImageIdInput.value = selectedImageId;
+    const idholder = document.getElementById("image-id");
+    idholder.value = tile.getAttribute("data-image-id");
 }
