@@ -16,7 +16,6 @@ namespace RajaFath.Controllers
     public class AdminController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
