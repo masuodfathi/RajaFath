@@ -20,9 +20,11 @@ namespace RajaFath.Controllers
         }
         public async Task<IActionResult> Show(int id)
         {
+            
             var posts = await _context.Posts.Where(p => p.Id == id)
                     .Include(p => p.FeaturedImage)
                     .Include(p => p.PostCategory)
+                        .ThenInclude(pc => pc.Category)
                     .Include(p => p.Author)
                     .FirstOrDefaultAsync();
             if (posts != null)
@@ -34,7 +36,8 @@ namespace RajaFath.Controllers
                     Content = posts.Content,
                     UpdateDate = posts.UpdatedDate,
                     Author = posts.Author,
-                    FeaturImage = posts.FeaturedImage
+                    FeaturImage = posts.FeaturedImage,
+                    Categories = posts.PostCategory?.Select(p=>p.Category).ToList()
                 };
                 return View(model);
             }
