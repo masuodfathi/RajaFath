@@ -22,13 +22,26 @@ namespace RajaFath.Controllers
         public async Task<IActionResult> Index()
         {
             var model = new HomePageViewModel();
-            var slides = new List<Carousel>()
+            
+            //var slides = new List<Carousel>()
+            //{
+            //    new Carousel{CarouselId= 1, Title="پروژه تجاری دریاچه",Description="بهترین و نزدیکترین پروژه تجاری در رینگ اول دریاچه",Path="images\\slide1.jpg",PostId=1131},
+            //    new Carousel{CarouselId= 2, Title="پروژه آرتمیس",Description="مناسب ترین پروژه مسکونی برای سرمایه گذاری در منطقه 22",Path="images\\slider2.jpg",PostId=1133},
+            //    new Carousel{CarouselId= 3, Title="پروژه الماس",Description="the first description",Path="images\\slider3.jpg",PostId=1166},
+            //};
+            var projects = await GetCategoryPostsAsync("پروژه");
+            var slides = new List<Carousel>();
+            foreach (var item in projects)
             {
-                new Carousel{CarouselId= 1, Title="پروژه تجاری دریاچه",Description="بهترین و نزدیکترین پروژه تجاری در رینگ اول دریاچه",Path="images\\slide1.jpg",PostId=1131},
-                new Carousel{CarouselId= 2, Title="پروژه آرتمیس",Description="مناسب ترین پروژه مسکونی برای سرمایه گذاری در منطقه 22",Path="images\\slider2.jpg",PostId=1133},
-                new Carousel{CarouselId= 3, Title="پروژه الماس",Description="the first description",Path="images\\slider3.jpg",PostId=1166},
-            };
-
+                var carousel = new Carousel()
+                {
+                    CarouselId = item.Id,
+                    Title = item.Title,
+                    Description = item.Excerpt,
+                    Path = item.ImageUrl,
+                };
+                slides.Add(carousel);
+            }
             if (slides.Count > 0)
             {
                 model.Carousel = slides;
@@ -36,7 +49,7 @@ namespace RajaFath.Controllers
 
             var viewModel = new HomePageViewModel
             {
-                Projects = await GetCategoryPostsAsync("پروژه"),
+                Projects = projects,
                 News = await GetCategoryPostsAsync("خبر"),
                 Activities = await GetCategoryPostsAsync("زمینه فعالیت"),
                 posts = await GetCategoryPostsAsync("مقاله"),
@@ -45,29 +58,41 @@ namespace RajaFath.Controllers
 
             return View(viewModel);
         }
+
+        
+
         private async Task<List<homePostViewModel>> GetCategoryPostsAsync(string categoryName)
         {
-            var postList = await _context.Posts
+            if ( _context.Posts != null)
+            {
+                var postList = await _context.Posts
                 .Where(p => p.PostCategory.Any(pc => pc.Category.Name == categoryName) && p.PostType == "post")
                 .OrderByDescending(p => p.CreatedDate)
                 .Take(3)
-                .Include(p=>p.FeaturedImage)
-                .Include(p=>p.Author)
+                .Include(p => p.FeaturedImage)
+                .Include(p => p.Author)
                 .ToListAsync();
+
+                return postList.Select(post => new homePostViewModel
+                {
+                    // Map properties from Post to homePostViewModel here
+                    // For example:
+                    Id = post.Id,
+                    Title = post.Title,
+                    Excerpt = post.Excerpt,
+                    Author = post.Author?.UserName,
+                    ImageUrl = post.FeaturedImage?.ImageUrl,
+                    CreatedDate = CalculateTimeDifference(post.CreatedDate),
+                    TimeDifference = GetFormattedTimeDifference(post.CreatedDate)
+                }).ToList();
+            }
+            else
+            {
+                return null;
+            }
             
 
-            return postList.Select(post => new homePostViewModel
-            {
-                // Map properties from Post to homePostViewModel here
-                // For example:
-                Id = post.Id,
-                Title = post.Title,
-                Excerpt = post.Excerpt,
-                Author = post.Author?.UserName,
-                ImageUrl = post.FeaturedImage?.ImageUrl,
-                CreatedDate = CalculateTimeDifference(post.CreatedDate),
-                TimeDifference = GetFormattedTimeDifference(post.CreatedDate)
-            }).ToList();
+            
         }
 
         private DateTime? CalculateTimeDifference(DateTime? createdDate)
