@@ -8,6 +8,6 @@ namespace RajaFath.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CategoryId { get; set; }
         public string? Name { get; set; }
-        List<PostCategory>? PostCategory { get; set; }
+        public List<PostCategory>? PostCategory { get; set; }
     }
 }
