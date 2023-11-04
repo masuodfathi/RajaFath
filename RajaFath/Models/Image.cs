@@ -19,7 +19,7 @@ namespace RajaFath.Models
             // Navigation property for the associated image-post relationships
 
             public List<ImagePost>? ImagePosts { get; set; }
-            public ICollection<Post>? Posts { get; set; }
+            public List<Post>? Posts { get; set; }
 
     }
 }

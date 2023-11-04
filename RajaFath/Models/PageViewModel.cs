@@ -15,6 +15,6 @@ namespace RajaFath.Models
         //    get { return AuthorName; }
         //}
         public Image? FeaturImage { get; set; }
-
+        public List<Category>? Categories { get; internal set; }
     }
 }
