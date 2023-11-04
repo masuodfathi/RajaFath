@@ -26,6 +26,8 @@
 
   <ItemGroup>
     <None Include="wwwroot\js\HandleTag.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\font\bootstrap-icons.scss" />
+    <None Include="wwwroot\lib\bootstrap\dist\font\fonts\bootstrap-icons.woff2" />
   </ItemGroup>
 
 </Project>
