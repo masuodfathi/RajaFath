@@ -22,7 +22,7 @@ namespace RajaFath.Models
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string? Excerpt { get; set; } // A short teaser or summary of the post
-        public int? FeaturedImageId { get; set; } // URL or file path to a featured image
+        public int? FeaturedImageId { get; set; } // Id to an image
         public Image? FeaturedImage { get; set; }
         public string? AuthorId { get; set; } // Reference to the author's user ID
         public IdentityUser? Author { get; set; }// Navigation property for the author
