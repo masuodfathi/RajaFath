@@ -13,5 +13,8 @@ namespace RajaFath.Models
         public string? Path { get; set; }
         public int? PostId { get; set; }
 
+        // Navigation property to represent the relationship with Post
+        public Post? Post { get; set; }
+
     }
 }
