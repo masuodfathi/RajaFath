@@ -4,6 +4,7 @@
         text-shadow:0 0 7px #000;
     }
     .carousel-caption { background: radial-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0)); }
+    
 </style>
 <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
@@ -19,11 +20,11 @@
             
             
             <div class="carousel-item @(activcounter == 0 ? "active" : "")">
-                <a asp-controller="post" asp-action="show" asp-route-id="@item.PostId">
-                    <img src="@item.Path" class="d-block w-100" alt="@item.Title">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h2 class=" text-shadow fs-1">@item.Title</h2>
-                        <p class="fw-normal text-shadow fs-3">@item.Description</p>
+                <a asp-controller="post" asp-action="show" asp-route-id="@item.CarouselId">
+                    <img src="@item.Path" class="d-block w-100 object-fit-cover" alt="@item.Title">
+                    <div class="carousel-caption ">
+                        <h2 class="text-shadow fs-1">@item.Title</h2>
+                        <p class="fw-normal text-shadow fs-5 d-none d-md-block">@item.Description</p>
                     </div>
                 </a>
             </div>
