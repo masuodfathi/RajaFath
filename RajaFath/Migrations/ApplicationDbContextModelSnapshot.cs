@@ -239,6 +239,33 @@ namespace RajaFath.Migrations
                     b.ToTable("PostPost");
                 });
 
+            modelBuilder.Entity("RajaFath.Models.Carousel", b =>
+                {
+                    b.Property<int>("CarouselId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarouselId"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CarouselId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Carousel");
+                });
+
             modelBuilder.Entity("RajaFath.Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -392,9 +419,6 @@ namespace RajaFath.Migrations
                     b.Property<int?>("FeaturedImageId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
-
                     b.Property<bool?>("IsArchived")
                         .HasColumnType("bit");
 
@@ -486,8 +510,6 @@ namespace RajaFath.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("FeaturedImageId");
-
-                    b.HasIndex("ImageId");
 
                     b.ToTable("Posts");
                 });
@@ -624,6 +646,15 @@ namespace RajaFath.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RajaFath.Models.Carousel", b =>
+                {
+                    b.HasOne("RajaFath.Models.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("RajaFath.Models.Comment", b =>
                 {
                     b.HasOne("RajaFath.Models.Post", "Post")
@@ -655,12 +686,8 @@ namespace RajaFath.Migrations
                         .HasForeignKey("AuthorId");
 
                     b.HasOne("RajaFath.Models.Image", "FeaturedImage")
-                        .WithMany()
-                        .HasForeignKey("FeaturedImageId");
-
-                    b.HasOne("RajaFath.Models.Image", null)
                         .WithMany("Posts")
-                        .HasForeignKey("ImageId");
+                        .HasForeignKey("FeaturedImageId");
 
                     b.Navigation("Author");
 
@@ -670,7 +697,7 @@ namespace RajaFath.Migrations
             modelBuilder.Entity("RajaFath.Models.PostCategory", b =>
                 {
                     b.HasOne("RajaFath.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("PostCategory")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -703,6 +730,11 @@ namespace RajaFath.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("RajaFath.Models.Category", b =>
+                {
+                    b.Navigation("PostCategory");
                 });
 
             modelBuilder.Entity("RajaFath.Models.Image", b =>
