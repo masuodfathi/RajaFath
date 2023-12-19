@@ -964,6 +964,7 @@ namespace RajaFath.Controllers
                     NumberOfManagers = model.NumberOfManagers,
                     SuccessfullProjects = model.SuccessfullProjects,
                     Address = model.Address,
+                    CentralOffice = model.CentralOffice,
                     Tel = model.Tel,
                     Mobile = model.Mobile,
                     FooterDescription = model.FooterDescription,
@@ -997,6 +998,7 @@ namespace RajaFath.Controllers
                         siteSettings.NumberOfManagers = setting.NumberOfManagers;
                         siteSettings.SuccessfullProjects = setting.SuccessfullProjects;
                         siteSettings.Address = setting.Address;
+                        siteSettings.CentralOffice = setting.CentralOffice;
                         siteSettings.Tel = setting.Tel;
                         siteSettings.Mobile = setting.Mobile;
                         siteSettings.FooterDescription = setting.FooterDescription;
