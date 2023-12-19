@@ -560,6 +560,55 @@ namespace RajaFath.Migrations
                     b.ToTable("postTags");
                 });
 
+            modelBuilder.Entity("RajaFath.Models.SiteSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CentralOffice")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FooterDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogoAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Map")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mobile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NumberOfManagers")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SiteDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SiteName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StartingActivityYear")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SuccessfullProjects")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("siteSettings");
+                });
+
             modelBuilder.Entity("RajaFath.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
