@@ -477,7 +477,9 @@ namespace RajaFath.Controllers
                 Posts = postViewModels,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                TotalPosts = _context.Posts.Count() // Include the total count for pagination
+                TotalPosts = _context.Posts
+                .Where(p => p.PostType == postType).Count(),// Include the total count for pagination
+                PostType = postType
             };
 
 
@@ -940,5 +942,78 @@ namespace RajaFath.Controllers
             return Regex.Replace(text, "<.*?>", "");
         }
 
+        ////////////////////////////--- Setting ------/////////////////////////////
+        // Action to display and edit site settings
+        public IActionResult SiteSettings()
+        {
+            var siteSettings = _context.siteSettings.FirstOrDefault();
+            return View(siteSettings);
+        }
+
+        // Action to handle the form submission for updating site settings
+        [HttpPost]
+        public async Task<IActionResult> UpdateSiteSettings(SiteSetting model)
+        {
+            if (ModelState.IsValid)
+            {
+                var setting = new SiteSetting
+                {
+                    SiteName = model.SiteName,
+                    SiteDescription = model.SiteDescription,
+                    StartingActivityYear = model.StartingActivityYear,
+                    NumberOfManagers = model.NumberOfManagers,
+                    SuccessfullProjects = model.SuccessfullProjects,
+                    Address = model.Address,
+                    Tel = model.Tel,
+                    Mobile = model.Mobile,
+                    FooterDescription = model.FooterDescription,
+                    Map = model.Map
+                };
+                // Update the site settings in the database
+                var siteSettings = await _context.siteSettings.FirstOrDefaultAsync();
+                if (siteSettings == null)
+                {
+                    
+                    try
+                    {
+                        await _context.siteSettings.AddAsync(setting);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception)
+                    {
+                        ViewBag.Error = "خطایی رخ داده بعدا دوباره تلاش کنید";
+                        return View(model);
+                    }
+
+                    
+                }
+                else
+                {
+                    try
+                    {
+                        siteSettings.SiteName = setting.SiteName;
+                        siteSettings.SiteDescription = setting.SiteDescription;
+                        siteSettings.StartingActivityYear = setting.StartingActivityYear;
+                        siteSettings.NumberOfManagers = setting.NumberOfManagers;
+                        siteSettings.SuccessfullProjects = setting.SuccessfullProjects;
+                        siteSettings.Address = setting.Address;
+                        siteSettings.Tel = setting.Tel;
+                        siteSettings.Mobile = setting.Mobile;
+                        siteSettings.FooterDescription = setting.FooterDescription;
+                        _context.siteSettings.Update(siteSettings);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+                }
+                return RedirectToAction("SiteSettings");
+            }
+
+            // If model validation fails, return to the form with validation errors
+            return View("SiteSettings", model);
+        }
     }
 }
