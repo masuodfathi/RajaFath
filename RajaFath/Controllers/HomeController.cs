@@ -21,14 +21,8 @@ namespace RajaFath.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var setting = await _context.siteSettings.FirstOrDefaultAsync();
             var model = new HomePageViewModel();
-            
-            //var slides = new List<Carousel>()
-            //{
-            //    new Carousel{CarouselId= 1, Title="پروژه تجاری دریاچه",Description="بهترین و نزدیکترین پروژه تجاری در رینگ اول دریاچه",Path="images\\slide1.jpg",PostId=1131},
-            //    new Carousel{CarouselId= 2, Title="پروژه آرتمیس",Description="مناسب ترین پروژه مسکونی برای سرمایه گذاری در منطقه 22",Path="images\\slider2.jpg",PostId=1133},
-            //    new Carousel{CarouselId= 3, Title="پروژه الماس",Description="the first description",Path="images\\slider3.jpg",PostId=1166},
-            //};
             var projects = await GetCategoryPostsAsync("پروژه");
             var slides = new List<Carousel>();
             foreach (var item in projects)
@@ -50,10 +44,11 @@ namespace RajaFath.Controllers
             var viewModel = new HomePageViewModel
             {
                 Projects = projects,
-                News = await GetCategoryPostsAsync("خبر"),
+                News = await GetCategoryPostsAsync("خبر",4),
                 Activities = await GetCategoryPostsAsync("زمینه فعالیت"),
                 posts = await GetCategoryPostsAsync("مقاله"),
-                Carousel = slides
+                Carousel = slides,
+                siteSetting = setting
             };
 
             return View(viewModel);
@@ -61,14 +56,14 @@ namespace RajaFath.Controllers
 
         
 
-        private async Task<List<homePostViewModel>> GetCategoryPostsAsync(string categoryName)
+        private async Task<List<homePostViewModel>> GetCategoryPostsAsync(string categoryName,int number=3)
         {
             if ( _context.Posts != null)
             {
                 var postList = await _context.Posts
                 .Where(p => p.PostCategory.Any(pc => pc.Category.Name == categoryName) && p.PostType == "post")
                 .OrderByDescending(p => p.CreatedDate)
-                .Take(3)
+                .Take(number)
                 .Include(p => p.FeaturedImage)
                 .Include(p => p.Author)
                 .ToListAsync();
