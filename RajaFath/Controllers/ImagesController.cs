@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RajaFath.Data;
 using RajaFath.Models;
 
 namespace RajaFath.Controllers
 {
-    
+    [Authorize(Roles = "Admin")]
     public class ImagesController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
