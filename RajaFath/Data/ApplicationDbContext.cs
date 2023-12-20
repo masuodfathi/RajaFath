@@ -42,5 +42,6 @@ namespace RajaFath.Data
         public DbSet<Category>? Categories { get; set; }
         public DbSet<PostCategory>? postCategories { get; set; }
         public DbSet<PostTag>? postTags { get; set; }
+        public DbSet<SiteSetting>? siteSettings { get; set; }
     }
 }
