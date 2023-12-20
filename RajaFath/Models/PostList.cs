@@ -6,6 +6,7 @@
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public int TotalPosts {  get; set; }
+        public string? PostType {  get; set; }
         
     }
 }
