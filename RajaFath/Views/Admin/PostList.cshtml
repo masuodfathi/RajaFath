@@ -32,6 +32,7 @@
             <tr>
                 <th>@Html.DisplayNameFor(model => model.Posts[0].Title)</th>
                 <th>@Html.DisplayNameFor(model => model.Posts[0].Excerpt)</th>
+                <th>نوع</th>
                 <th>@Html.DisplayNameFor(model => model.Posts[0].AuthorName)</th>
                 <th>@Html.DisplayNameFor(model => model.Posts[0].UpdateDate)</th>
             </tr>
@@ -47,6 +48,7 @@
                         </div>
                     </td>
                     <td>@Html.DisplayFor(model => item.Excerpt)</td>
+                    <td>@(item.PostType == "page" ? "برگه" : "نوشته")</td>
                     <td>@Html.DisplayFor(model => item.AuthorName)</td>
                     <td>@Html.DisplayFor(model => item.UpdateDate)</td>
                 </tr>
@@ -59,7 +61,7 @@
     <ul class="pagination justify-content-center">
         @if (Model.PageNumber > 1)
         {
-            <li class="page-item"><a class="page-link" href="?page=@(Model.PageNumber - 1)">قبلی</a></li>
+            <li class="page-item"><a class="page-link" href="?postType=@(Model.PostType)&page=@(Model.PageNumber - 1)">قبلی</a></li>
         }
         else
         {
@@ -69,13 +71,13 @@
         @for (int pageNumber = 1; pageNumber <= totalPages; pageNumber++)
         {
             <li class="page-item @(pageNumber == Model.PageNumber ? "active" : "")">
-                <a class="page-link" href="?page=@pageNumber">@pageNumber</a>
+                <a class="page-link" href="?postType=@(Model.PostType)&page=@pageNumber">@pageNumber</a>
             </li>
         }
 
         @if (Model.PageNumber < totalPages)
         {
-            <li class="page-item"><a class="page-link" href="?page=@(Model.PageNumber + 1)">بعدی</a></li>
+            <li class="page-item"><a class="page-link" href="?postType=@(Model.PostType)&page=@(Model.PageNumber + 1)">بعدی</a></li>
         }
         else
         {
