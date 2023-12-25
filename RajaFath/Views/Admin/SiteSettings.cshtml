@@ -1,0 +1,66 @@
+﻿@model SiteSetting
+@{
+    ViewData["Title"] = "تنظیمات سایت";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<h1>تنظیمات سایت</h1>
+
+
+
+<form asp-action="UpdateSiteSettings" method="post">
+    
+    <div class="mb-5">
+        <label asp-for="SiteName" class="form-label">عنوان سایت</label>
+        <input asp-for="SiteName" class="form-control" />
+    </div>
+
+    <div class="mb-5">
+        <label asp-for="SiteDescription" class="form-label">توضیحات صفحه اصلی</label>
+        <textarea asp-for="SiteDescription" class="form-control" rows="5"></textarea>
+    </div>
+
+    <div class="mb-5">
+        <label asp-for="StartingActivityYear" class="form-label">سال شروع فعالیت</label>
+    <input asp-for="StartingActivityYear" class="form-control" />
+    </div>
+
+    <div class="mb-5">
+        <label asp-for="NumberOfManagers" class="form-label">تعداد مدیران</label>
+    <input asp-for="NumberOfManagers" class="form-control" />
+    </div>
+
+    <div class="mb-5">
+        <label asp-for="SuccessfullProjects" class="form-label">تعداد پروژه های موفق</label>
+    <input asp-for="SuccessfullProjects" class="form-control" />
+    </div>
+
+    <div class="mb-5">
+        <label asp-for="Address" class="form-label">آدرس</label>
+    <input asp-for="Address" class="form-control" />
+    </div>
+
+    <div class="mb-5">
+        <label asp-for="CentralOffice" class="form-label">دفتر مرکزی</label>
+        <input asp-for="CentralOffice" class="form-control" />
+    </div>
+
+    <div class="mb-5">
+        <label asp-for="Tel" class="form-label">تلفن</label>
+        <input asp-for="Tel" class="form-control" />
+    </div>
+
+    <div class="mb-5">
+        <label asp-for="Mobile" class="form-label">شماره همراه</label>
+        <input asp-for="Mobile" class="form-control" />
+    </div>
+
+    @* <div class="mb-5">
+        <label asp-for="FooterDescription" class="form-label">توضیحات پاورقی</label>
+        <textarea asp-for="FooterDescription" class="form-control" rows="5"></textarea>
+    </div> *@
+
+    <div class="mb-5">
+        <button type="submit" class="btn btn-primary mb-3">ذخیره</button>
+    </div>
+</form>
