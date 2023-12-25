@@ -1,6 +1,6 @@
 ﻿@model RajaFath.Models.HomePageViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = Model.siteSetting?.SiteName;
 }
 
 <div id="slider">
@@ -19,12 +19,7 @@
             <h1>
                 معرفی شرکت رجا فتح
             </h1>
-            <p style="text-align:justify">
-                فعالیت های ما شامل فعالیت های عمرانی از قبیل طراحی، اجرا، نظارت، احداث مسکن و تولیدی صنعتی شامل تولید کلیه مصالح ساختمانی و قطعات بتونی و بسته بندی مواد غذایی و محصولات کشاورزی و خدمات بازرگانی از قبیل خرید، فروش و شرکت در مزایدهها و مناقصات و ارائه خدمات صادرات واردات مرتبط با فعالیت شرکت، ارائه خدمات آموزشی از قبیل رایانه و بیمه، خدمات بهداشتی و درمانی و حمل و نقل ، خدمات اعتباری و تهیه و توزیع کالاهای مورد نیاز اعضاء.
-                </p>
-            <p style="text-align:justify">
-همچنین اهم فعاليتها و عملکرد های منتخب شرکت رجاءفتح شامل 1. حوزه مسکن 2. حوزه عمران 3. حوزه صنعت 4. حوزه خدمات 5. حوزه کشاورزی و 5. حوزه تامين و توزیع کالا است.
-            </p>
+            <p style="text-align:justify">@Model.siteSetting?.SiteDescription</p>
             <p class="text-center">
                 <a class="text-start" asp-area="" asp-controller="page" asp-action="show" asp-route-slug="درباره ما">
                     درباره ما بیشتر بدانید
@@ -38,19 +33,19 @@
 
 
                 <div class="p-3" id="my-flex">
-                    <span class="my-circle">1376</span>
+                    <span class="my-circle">@Model.siteSetting?.StartingActivityYear</span>
                     سال شروع فعالیت
                 </div>
 
 
                 <div class="p-3" id="my-flex">
-                    <span class="my-circle">8</span>
+                    <span class="my-circle">@Model.siteSetting?.NumberOfManagers</span>
                     هیئت مدیره شرکت
                 </div>
 
 
                 <div class="p-3" id="my-flex">
-                    <span class="my-circle">9</span>
+                    <span class="my-circle">@Model.siteSetting?.SuccessfullProjects</span>
                     پروژه های موفق
                 </div>
 
@@ -88,13 +83,13 @@
         <div class="col-md-6">
             <ul class="list-unstyled">
                 <li class="py-4">
-                    دفتر مرکزی: تهران
+                    دفتر مرکزی: @Model.siteSetting?.CentralOffice
                 </li>
                 <li class="py-4">
-                    نشانی: تهران انتهای همت غرب دریاچه چیتگر میدان ساحل
+                    نشانی: @Model.siteSetting?.Address
                 </li>
                 <li class="py-4">
-                    تلفن: <a href="tel:0214444444"> 0214444444</a>
+                    تلفن: <a href="tel:@Model.siteSetting?.Tel"> @Model.siteSetting?.Tel</a>
                 </li>
             </ul>
         </div>
