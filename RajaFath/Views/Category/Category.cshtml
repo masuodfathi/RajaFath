@@ -1,6 +1,6 @@
 ﻿@model List<RajaFath.Models.homePostViewModel>
 @{
-    ViewData["Title"] = "Category";
+    ViewData["Title"] = ViewBag.Category;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,7 +14,7 @@
             <article class="col">
                 <div class="card p-0 h-100">
                     <a asp-action="show" asp-controller="Post" asp-route-id="@item.Id">
-                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title">
+                        <img src="@item.ImageUrl" class="card-img-top news" alt="@item.Title">
                     </a>
                     <div class="card-body">
                         <a asp-action="show" asp-controller="Post" asp-route-id="@item.Id">
