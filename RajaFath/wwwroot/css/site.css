@@ -1,9 +1,37 @@
+@font-face { 
+    font-family: 'Yekan';
+    src: url('../fonts/100/iranyekanwebthin.612285dc.eot');
+    src: url('../fonts/100/iranyekanwebthin.4672fc69.woff') format('woff'),
+         url('../fonts/100/iranyekanwebthin.0d88b7bd.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+
+}
 @font-face {
     font-family: 'Yekan';
     src: url('../fonts/300/iranyekanweblight.dd0fc0f0.eot');
-    src: url('../fonts/300/iranyekanweblight.dd0fc0f0.eot?#iefix') format('embedded-opentype'), url('../fonts/300/iranyekanweblight.069074f8.woff') format('woff'), url('../fonts/300/iranyekanweblight.deb03d0d.ttf') format('truetype');
-    font-weight: normal;
+    src: url('../fonts/300/iranyekanweblight.069074f8.woff') format('woff'),
+         url('../fonts/300/iranyekanweblight.1225b31b.woff2') format('woff2'),
+         url('../fonts/300/iranyekanweblight.deb03d0d.ttf') format('truetype');
+    font-weight: 300;
     font-style: normal;
+}
+
+@font-face { 
+    font-family: 'Yekan'; 
+    src: url('../fonts/500/iranyekanwebmedium.05f9bbc0.eot');
+    src: url('../fonts/500/iranyekanwebmedium.2d4f96e5.woff') format('woff'),
+         url('../fonts/500/iranyekanwebmedium.bae5f862.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal; 
+}
+@font-face { 
+    font-family: 'Yekan';
+    src: url('../fonts/700/iranyekanwebbold.b1d3816e.eot');
+    src: url('../fonts/700/iranyekanwebbold.f94d5af0.woff') format('woff'),
+        url('../fonts/700/iranyekanwebbold.cfb6e26c.woff2') format('woff2')
+        url('../fonts/700/iranyekanwebbold.f8bf4bf6.ttf') format('truetype');
+    font-weight: 700;
 }
 html {
   font-size: 14px;
@@ -22,4 +50,13 @@ html {
 
 body {
   font-family: Yekan !important;
+  font-weight:300;
+}
+img.activity{
+    height:250px;
+    width:100%;
+}
+img.news { height: 350px; object-fit: cover; }
+.site-logo{
+    width:40px;
 }
