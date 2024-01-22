@@ -469,7 +469,8 @@ namespace RajaFath.Controllers
                 Excerpt = p.Excerpt,
                 AuthorName = p.Author?.UserName, // Access the related user's username
                 UpdateDate = p.UpdatedDate,
-                PostType = p.PostType
+                PostType = p.PostType,
+                ShowInCarousel = p.ShowInCarousel,
             }).ToList();
 
             var model = new PostList
@@ -479,7 +480,7 @@ namespace RajaFath.Controllers
                 PageSize = pageSize,
                 TotalPosts = _context.Posts
                 .Where(p => p.PostType == postType).Count(),// Include the total count for pagination
-                PostType = postType
+                PostType = postType,
             };
 
 
@@ -759,6 +760,38 @@ namespace RajaFath.Controllers
             }
 
             await _context.SaveChangesAsync();
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> UpdateShowInCarousel(int postId, bool isChecked)
+        {
+            // Retrieve the post from the database
+            var post = _context.Posts.Find(postId);
+
+            if (post != null)
+            {
+                // Update the ShowInCarousel property
+                post.ShowInCarousel = isChecked;
+                _context.Posts.Update(post);
+
+                // Save changes to the database
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+
+                    return Json(new { success = false });
+                }
+                
+
+                // You may return a JSON response if needed
+                return Json(new { success = true });
+            }
+
+            // You may return a JSON response indicating failure if needed
+            return Json(new { success = false });
         }
         /// ////////////////////////-----Save Image-----/////////////////////////////////////////////
         [HttpPost]
