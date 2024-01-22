@@ -473,6 +473,9 @@ namespace RajaFath.Migrations
                     b.Property<int?>("ShareCount")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("ShowInCarousel")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Slug")
                         .HasColumnType("nvarchar(max)");
 
