@@ -14,6 +14,7 @@ namespace RajaFath.Models
         [Display(Name = "آخرین به‌روز رسانی")]
         public DateTime? UpdateDate { get; set; }
         public string? PostType {  get; set; }
+        public bool? ShowInCarousel { get; set; }
 
     }
 }
