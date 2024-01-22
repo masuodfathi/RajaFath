@@ -27,6 +27,7 @@ namespace RajaFath.Models
         public string? AuthorId { get; set; } // Reference to the author's user ID
         public IdentityUser? Author { get; set; }// Navigation property for the author
         public string? PostType { get; set; }
+        public bool? ShowInCarousel { get; set; }
         // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
         // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
         // Additional properties// Additional properties// Additional properties// Additional properties// Additional properties
