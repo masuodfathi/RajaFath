@@ -31,6 +31,19 @@
                             </a>
                         </li>
                         <li>
+                            <a asp-route-postType="post" asp-controller="Admin" asp-action="PostList" class="nav-link px-0 align-middle text-light">
+                                <i class="fs-4 bi bi-pin-angle"></i> <span class="ms-1 d-none d-sm-inline">نوشته ها</span>
+                            </a>
+                            <ul class="collapse show nav flex-column me-3" id="submenu1" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a asp-route-postType="post" asp-controller="Admin" asp-action="PostList" class="nav-link px-0 text-light"><i class="fs-4 bi bi-files"></i><span class="d-none d-sm-inline">همه نوشته ها</span></a>
+                                </li>
+                                <li>
+                                    <a asp-route-postType="post" asp-controller="Admin" asp-action="CreatePost" class="nav-link px-0 text-light"><i class="bi bi-file-plus" style="font-size:1.5rem"></i><span class="d-none d-sm-inline">افزودن نوشته</span></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
                             <a asp-route-postType="page" asp-controller="Admin" asp-action="PostList" class="nav-link px-0 align-middle text-light">
                                 <i class="fs-4 bi bi-file-earmark-break"></i> <span class="ms-1 d-none d-sm-inline">برگه ها</span>
                             </a>
@@ -54,17 +67,9 @@
                             </a>
                         </li>
                         <li>
-                            <a asp-route-postType="post" asp-controller="Admin" asp-action="PostList" class="nav-link px-0 align-middle text-light">
-                                <i class="fs-4 bi bi-pin-angle"></i> <span class="ms-1 d-none d-sm-inline">نوشته ها</span>
+                            <a asp-controller="Admin" asp-action="SiteSettings" class="nav-link px-0 align-middle text-light">
+                                <i class="fs-4 bi bi-person-gear"></i> <span class="ms-1 d-none d-sm-inline">تنظیمات</span>
                             </a>
-                            <ul class="collapse show nav flex-column me-3" id="submenu1" data-bs-parent="#menu">
-                                <li class="w-100">
-                                    <a asp-route-postType="post" asp-controller="Admin" asp-action="PostList" class="nav-link px-0 text-light"><i class="fs-4 bi bi-files"></i><span class="d-none d-sm-inline">همه نوشته ها</span></a>
-                                </li>
-                                <li>
-                                    <a asp-route-postType="post" asp-controller="Admin" asp-action="CreatePost" class="nav-link px-0 text-light"><i class="bi bi-file-plus" style="font-size:1.5rem"></i><span class="d-none d-sm-inline">افزودن نوشته</span></a>
-                                </li>
-                            </ul>
                         </li>
                         
                     </ul>
