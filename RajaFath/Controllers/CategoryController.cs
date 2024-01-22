@@ -35,9 +35,11 @@ namespace RajaFath.Controllers
         }
         public async Task<IActionResult> Category(string? Category)
         {
-            ViewBag.Category = Category;
+            
+            string cat = Category.ToString().Replace("-", " ");
+            ViewBag.Category = cat;
             var postList = await _context.Posts
-                .Where(p => p.PostCategory.Any(pc => pc.Category.Name == Category) && p.PostType == "post")
+                .Where(p => p.PostCategory.Any(pc => pc.Category.Name == cat) && p.PostType == "post")
                 .OrderByDescending(p => p.CreatedDate)
                 .Include(p => p.FeaturedImage)
                 .Include(p => p.Author)
