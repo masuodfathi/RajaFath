@@ -66,21 +66,25 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-        name: "page",
-        pattern: "page/{slug}",
-        defaults: new { controller = "page", action = "Show" },
-        constraints: new { slug = new SlugifyParameterTransformer() }
-    );
-    endpoints.MapControllerRoute(
         name: "PostList",
         pattern: "Admin/PostList",
         defaults: new { controller = "Admin", action = "PostList" }
         );
+
     endpoints.MapControllerRoute(
         name: "Category",
-        pattern: "category/{category}",
-        defaults: new { controller = "Category", action= "Category" }
+        pattern: "{category}",
+        defaults: new { controller = "Category", action = "Category" },
+        constraints: new { category = new SlugifyParameterTransformer() }
         );
+
+    endpoints.MapControllerRoute(
+        name: "Page",
+        pattern: "{slug}",
+        defaults: new { controller = "Page", action = "show" },
+        constraints: new { slug = new SlugifyParameterTransformer() }
+    );
+    
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}"
