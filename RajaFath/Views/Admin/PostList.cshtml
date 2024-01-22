@@ -33,6 +33,7 @@
                 <th>@Html.DisplayNameFor(model => model.Posts[0].Title)</th>
                 <th>@Html.DisplayNameFor(model => model.Posts[0].Excerpt)</th>
                 <th>نوع</th>
+                <th>بنر</th>
                 <th>@Html.DisplayNameFor(model => model.Posts[0].AuthorName)</th>
                 <th>@Html.DisplayNameFor(model => model.Posts[0].UpdateDate)</th>
             </tr>
@@ -49,6 +50,7 @@
                     </td>
                     <td>@Html.DisplayFor(model => item.Excerpt)</td>
                     <td>@(item.PostType == "page" ? "برگه" : "نوشته")</td>
+                    <td><input type="checkbox" class="showInCarouselCheckbox" data-post-id="@item.Id" @(item.ShowInCarousel.GetValueOrDefault() ? "checked" : "") /></td>
                     <td>@Html.DisplayFor(model => item.AuthorName)</td>
                     <td>@Html.DisplayFor(model => item.UpdateDate)</td>
                 </tr>
@@ -85,3 +87,27 @@
         }
     </ul>
 </nav>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // Attach change event handler to checkboxes
+            $('.showInCarouselCheckbox').change(function () {
+                var postId = $(this).data('post-id');
+                var isChecked = $(this).is(':checked');
+
+                // Send an AJAX request to update the database
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/UpdateShowInCarousel',
+                    data: { postId: postId, isChecked: isChecked },
+                    success: function (result) {
+                        console.log(result);
+                    },
+                    error: function (error) {
+                        console.error('Error updating ShowInCarousel status:', error);
+                    }
+                });
+            });
+        });
+    </script>
+}
