@@ -5,10 +5,10 @@ namespace RajaFath.Interfaces
     public interface IPostRepository
     {
         Task<Post> GetPost(int postId);
-        Task<ICollection<Post>> GetPostByType(string postType);
+        Task<ICollection<Post>> GetPostsByType(string postType);
         Task<ICollection<Post>> GetPosts();
-        Task<bool> PostExict(int postId);
-        Task<bool> PostExict(Post post);
+        Task<bool> PostExist(int postId);
+        Task<bool> PostExist(Post post);
         Task<bool> CreatePost(Post post);
         Task<bool> UpdatePost(Post post,int postId);
         Task<bool> DeletePost(int postId);
