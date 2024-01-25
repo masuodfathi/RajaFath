@@ -1,6 +1,7 @@
-﻿using RajaFath.Interfaces;
-using RajaFath.Models;
+﻿using RajaFath.Models;
 using RajaFath.DTOs;
+using RajaFath.Interfaces.Repositories;
+using RajaFath.Interfaces.Services;
 
 namespace RajaFath.Services
 {
