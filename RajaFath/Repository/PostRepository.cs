@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RajaFath.Data;
 using RajaFath.Interfaces;
 using RajaFath.Models;
@@ -45,7 +46,7 @@ namespace RajaFath.Repository
             return await _context.Posts.FindAsync(postId);
         }
 
-        public async Task<ICollection<Post>> GetPostByType(string postType)
+        public async Task<ICollection<Post>> GetPostsByType(string postType)
         {
             return await _context.Posts.Where(p => p.PostType == postType).ToListAsync();
         }
@@ -55,14 +56,14 @@ namespace RajaFath.Repository
             return await _context.Posts.ToListAsync();
         }
 
-        public async Task<bool> PostExict(int postId)
+        public async Task<bool> PostExist(int postId)
         {
             return await _context.Posts.AnyAsync(p => p.Id == postId);
         }
 
-        public async Task<bool> PostExict(Post post)
+        public async Task<bool> PostExist(Post post)
         {
-            return await PostExict(post.Id);
+            return await PostExist(post.Id);
         }
 
         public async Task<bool> Save()
@@ -74,23 +75,29 @@ namespace RajaFath.Repository
                 {
                     return true;
                 }
-                return false;
+                throw new DbUpdateException("Error updating the database.");
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                throw new DbUpdateException("Error updating the database.", ex);
             }
         }
 
         public async Task<bool> UpdatePost(Post post, int postId)
         {
+            var oldPost = await _context.Posts.FindAsync(postId);
+            if (oldPost == null)
+            {
+                throw new KeyNotFoundException($"Post with Id {postId} not found.");
+            }
             _context.Posts.Update(post);
             return await Save();
         }
 
         public async Task<bool> UpdatePostCategories(int postId, ICollection<int> categoryIds)
         {
-            //Remove exict category
+            //Remove exist category
             var existingCategories = await _context.postCategories
                 .Where(pc => pc.PostId == postId)
                 .ToListAsync();
