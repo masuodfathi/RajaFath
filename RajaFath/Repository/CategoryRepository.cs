@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RajaFath.Data;
-using RajaFath.Interfaces;
+using RajaFath.Interfaces.Repositories;
 using RajaFath.Models;
 
 namespace RajaFath.Repository
@@ -61,6 +61,23 @@ namespace RajaFath.Repository
             throw new KeyNotFoundException($"The category with id {CategoryId} not found");
         }
 
+        public async Task<ICollection<Category>> GetPostCategoriesAsync(int postId)
+        {
+            var postCategories = await _context.postCategories
+                .Where(pc => pc.PostId == postId)
+                .ToListAsync();
+
+            if (postCategories.Any())
+            {
+                var categoryIds = postCategories.Select(pc => pc.CategoryId);
+                var categories = await _context.Categories.Where(c => categoryIds.Contains(c.CategoryId)).ToListAsync();
+
+                return categories;
+            }
+
+            throw new KeyNotFoundException($"The post with id {postId} not found");
+        }
+
         public async Task<bool> SaveAsync()
         {
             try
@@ -79,9 +96,10 @@ namespace RajaFath.Repository
             }
         }
 
-        public async Task<bool> UpdateCategoryAsync(int CategoryId)
+        public async Task<bool> UpdateCategoryAsync(Category category)
         {
-            var categoryToUpdate = await _context.Categories.
+            _context.Categories.Update(category);
+            return await SaveAsync();
         }
     }
 }

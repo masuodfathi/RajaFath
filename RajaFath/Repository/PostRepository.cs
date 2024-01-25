@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RajaFath.Data;
-using RajaFath.Interfaces;
+using RajaFath.Interfaces.Repositories;
 using RajaFath.Models;
 
 namespace RajaFath.Repository
@@ -112,6 +112,12 @@ namespace RajaFath.Repository
 
             return await Save();
 
+        }
+
+        public async Task<ICollection<Post>> GetPostsByCategory(int categoryId)
+        {
+            return await _context.Posts.Where(p => p.PostCategory.Any(pc => pc.CategoryId == categoryId)).ToListAsync();
+            
         }
     }
 }

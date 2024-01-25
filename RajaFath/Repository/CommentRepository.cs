@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RajaFath.Data;
-using RajaFath.Interfaces;
+using RajaFath.Interfaces.Repositories;
 using RajaFath.Models;
 using System.Web.Mvc;
 
