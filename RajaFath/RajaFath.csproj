@@ -30,4 +30,8 @@
     <None Include="wwwroot\lib\bootstrap\dist\font\fonts\bootstrap-icons.woff2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mapping\" />
+  </ItemGroup>
+
 </Project>
