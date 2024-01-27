@@ -4,17 +4,18 @@ namespace RajaFath.Interfaces.Repositories
 {
     public interface IPostRepository
     {
-        Task<Post> GetPost(int postId);
-        Task<ICollection<Post>> GetPostsByType(string postType);
-        Task<ICollection<Post>> GetPostsByCategory(int categoryId);
-        Task<ICollection<Post>> GetPosts();
-        Task<bool> PostExist(int postId);
-        Task<bool> PostExist(Post post);
-        Task<bool> CreatePost(Post post);
-        Task<bool> UpdatePost(Post post, int postId);
-        Task<bool> DeletePost(int postId);
-        Task<int> AuthorPostCount(string authorId);
-        Task<bool> UpdatePostCategories(int postId, ICollection<int> categoryIds);
-        Task<bool> Save();
+        Task<Post> GetPostAsync(int postId);
+        Task<ICollection<Post>> GetPostsByTypeAsync(string postType);
+        Task<ICollection<Post>> GetPostsByCategoryAsync(int categoryId);
+        Task<ICollection<Post>> GetPostsAsync();
+        Task<bool> PostExistAsync(int postId);
+        Task<bool> PostExistAsync(Post post);
+        Task<bool> CreatePostAsync(Post post);
+        Task<bool> UpdatePostAsync(Post post, int postId);
+        Task<bool> DeletePostAsync(int postId);
+        Task<ICollection<Post>> GetAuthorPostsAsync(string authorId);
+        Task<int> AuthorPostCountAsync(string authorId);
+        Task<bool> UpdatePostCategoriesAsync(int postId, ICollection<int> categoryIds);
+        Task<bool> SaveAsync();
     }
 }
