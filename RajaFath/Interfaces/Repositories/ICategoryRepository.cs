@@ -11,6 +11,7 @@ namespace RajaFath.Interfaces.Repositories
         Task<bool> DeleteCategoryAsync(int CategoryId);
         Task<bool> DeleteCategoryRangeAsync(List<int> CategoryIds);
         Task<bool> UpdateCategoryAsync(Category category);
+        Task<bool> CategoryExist(int CategoryId);
         Task<bool> SaveAsync();
     }
 }

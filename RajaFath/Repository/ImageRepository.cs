@@ -5,7 +5,7 @@ using RajaFath.Models;
 
 namespace RajaFath.Repository
 {
-    public class ImageRepository : IImagesRepository
+    public class ImageRepository : IImageRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -25,7 +25,7 @@ namespace RajaFath.Repository
             
         }
 
-        public async Task<Image> GetImageAsync(int imageId)
+        public async Task<Image> GetImagePathAsync(int imageId)
         {
             var image = await _context.Images.FindAsync(imageId);
             if (image != null)
@@ -34,7 +34,7 @@ namespace RajaFath.Repository
             throw new KeyNotFoundException($"The image with the id {imageId} not found");
         }
 
-        public async Task<ICollection<Image>> GetImagesAsync()
+        public async Task<ICollection<Image>> GetImagesPathAsync()
         {
             return await _context.Images.ToListAsync();
         }
@@ -56,7 +56,7 @@ namespace RajaFath.Repository
             }
         }
 
-        public Task<bool> SaveImageAsync(Image image)
+        public Task<bool> SaveImagePathAsync(Image image)
         {
             if (image != null)
             {

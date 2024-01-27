@@ -25,6 +25,11 @@ namespace RajaFath.Repository
             throw new ArgumentNullException(nameof(category), "Category cannot be null");
         }
 
+        public async Task<bool> CategoryExist(int CategoryId)
+        {
+            return await _context.Categories.AnyAsync();
+        }
+
         public async Task<bool> DeleteCategoryAsync(int CategoryId)
         {
             var categoryToDelete = await _context.Categories.FindAsync(CategoryId);

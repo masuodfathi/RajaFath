@@ -29,22 +29,18 @@ namespace RajaFath.Services
 
         public async Task<ICollection<Comment>> GetCommentsAsync()
         {
-            return 
+            return await _commentRepository.GetCommentsAsync();
         }
 
-        public Task<ICollection<Comment>> GetCommentsOfPostAsync(int postId)
+        public async Task<ICollection<Comment>> GetCommentsOfPostAsync(int postId)
         {
-            throw new NotImplementedException();
+            return await _commentRepository.GetCommentsOfPostAsync(postId);
         }
 
-        public Task<ICollection<Comment>> GetCommentsOfUserAsync(string userId)
+        public async Task<ICollection<Comment>> GetCommentsOfUserAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await _commentRepository.GetCommentsOfUserAsync(userId);
         }
 
-        public Task<bool> SaveAsync()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

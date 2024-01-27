@@ -10,6 +10,6 @@ namespace RajaFath.Interfaces.Services
         Task<ICollection<Comment>> GetCommentsOfUserAsync(string userId);
         Task<bool> AddCommentAsync(Comment comment);
         Task<bool> DeleteCommentAsync(int commentId);
-        Task<bool> SaveAsync();
+        
     }
 }
